@@ -153,13 +153,13 @@ class Client(commands.Bot):
         await self.process_commands(message)
 
     # Check messages for ban words
-    async def checkMessages(self):
-        server = self.get_guild(1078029337091125270)
-        allTextChannels = server.text_channels
-        for channel in allTextChannels:
-            async for message in channel.history():
-                if message.content in self.ban_words:
-                    await message.delete()
+    #async def checkMessages(self):
+    #    server = self.get_guild(1078029337091125270)
+    #    allTextChannels = server.text_channels
+    #    for channel in allTextChannels:
+    #        async for message in channel.history():
+    #            if message.content in self.ban_words:
+    #                await message.delete()
 
 #    async def checkMessage(self, message):
 #        if message.content in self.ban_words:
