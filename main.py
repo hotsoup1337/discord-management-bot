@@ -46,9 +46,6 @@ class Client(commands.Bot):
         # print(message.author.name)
         # await message.author.send("Hey this is a private message")
 
-        if message.content.startswith("!help"):
-            await message.channel.send("Here's help!")
-
         # print out user stats
         if message.content.startswith("!stats"):
             completeText = message.content.split(" ")[
