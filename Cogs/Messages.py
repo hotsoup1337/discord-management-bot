@@ -11,6 +11,9 @@ class MusicButton(discord.ui.Button):
 
     async def callback(self, interaction: discord.Interaction):
         #await interaction.response.send_message("Ich wurde angeklickt!")
+
+        await interaction.response.defer()
+
         voice_channel = discord.utils.get(interaction.guild.voice_channels, name="General")
         #voice_client = await voice_channel.connect()
 
