@@ -8,11 +8,7 @@ from discord.ext import tasks, commands
 
 import os
 from dotenv import load_dotenv
-
 from Cogs import Messages
-
-TOKEN = "MTA2MzE1NTA5OTMyMjU2NDczOQ.GlD517.QlxbH8qGTEavhkhWmYUkTn2C_vgdPrt_V51-MA"
-
 
 class Client(commands.Bot):
 
