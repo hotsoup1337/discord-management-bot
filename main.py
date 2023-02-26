@@ -18,7 +18,7 @@ class Client(commands.Bot):
     #ban_words = ["Blödmann", "Musterstrasse 12 Frankfurt 069"]
 
     async def on_ready(self):
-        print("Bot is ready to go.")
+        print("Bot is ready to go!")
 
         #with open('banned_members.json', 'r') as banned_member_file:  # umbauen in Datenbank, statt JSON
         #    self.banned_members = json.load(banned_member_file)
@@ -45,10 +45,6 @@ class Client(commands.Bot):
         # print(message.content)
         # print(message.author.name)
         # await message.author.send("Hey this is a private message")
-
-        if message.content.startswith("!help"):
-            await message.channel.send("Here's help!")
-
         # print out user stats
         if message.content.startswith("!stats"):
             completeText = message.content.split(" ")[
