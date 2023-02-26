@@ -45,10 +45,10 @@ class Messages(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.Cog.listener()
-    async def on_message_edit(self, before, after):
-        await before.channel.send(f"Before: {before.content}")
-        await before.channel.send(f"After: {after.content}")
+    #@commands.Cog.listener()
+    #async def on_message_edit(self, before, after):
+    #    await before.channel.send(f"Before: {before.content}")
+    #    await before.channel.send(f"After: {after.content}")
 
     @commands.command()
     async def test(self, ctx):
