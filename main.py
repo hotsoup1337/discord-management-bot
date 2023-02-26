@@ -25,11 +25,11 @@ class Client(commands.Bot):
 
         #self.checkBannedUsers.start()
 
-        await self.checkMessages()
+        #await self.checkMessages()
 
         #await self.add_cog(Messages.Messages(self))
         await self.load_extension("Cogs.Messages")
-        await self.checkMessages()
+        #await self.checkMessages()
         await self.tree.sync()
 
         await self.change_presence(status=discord.Status.dnd, activity=discord.Game(" with Documents"))
