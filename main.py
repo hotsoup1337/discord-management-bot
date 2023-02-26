@@ -39,7 +39,7 @@ class Client(commands.Bot):
         if message.author == self.user:
             return
 
-        await self.checkMessage(message)
+#        await self.checkMessage(message)
 
         # print("Message recognized.")
         # print(message.content)
@@ -161,18 +161,18 @@ class Client(commands.Bot):
                 if message.content in self.ban_words:
                     await message.delete()
 
-    async def checkMessage(self, message):
-        if message.content in self.ban_words:
-            await message.delete()
+#    async def checkMessage(self, message):
+#        if message.content in self.ban_words:
+#            await message.delete()
 
             # wird für 20 sekunden gebannt
 
-            self.banned_members[message.author.id] = str(datetime.datetime.now() + datetime.timedelta(seconds=20))
+#            self.banned_members[message.author.id] = str(datetime.datetime.now() + datetime.timedelta(seconds=20))
 
-            with open('banned_members.json', 'w') as banned_member_file:
-                json.dump(self.banned_members, banned_member_file)
+#            with open('banned_members.json', 'w') as banned_member_file:
+ #               json.dump(self.banned_members, banned_member_file)
 
-            await message.author.ban()
+ #           await message.author.ban()
 
     async def on_raw_reaction_add(self, payload):
         # print(payload.guild_id)
