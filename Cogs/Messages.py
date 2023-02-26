@@ -39,6 +39,31 @@ class MusicView(discord.ui.View):
         self.add_item(MusicButton("Resume Music", discord.ButtonStyle.green, 2, bot))
         self.add_item(MusicButton("Stop Music", discord.ButtonStyle.red, 3, bot))
 
+class SelectMenu(discord.ui.Select):
+    def __init__(self):
+        super().__init__(placeholder="Wähle ein Auto", max_values=2, min_values=1)
+        self.add_option(label="Mazda RX8", description="Enthält einen Wankelmotor")
+        self.add_option(label="Mercedes CL500", description="Enthält einen Wankelmotor")
+        self.add_option(label="Toyota Supra", description="Enthält einen Wankelmotor")
+        self.add_option(label="Nissan GTR R34", description="Enthält einen Wankelmotor")
+
+    async def callback(self, interaction: discord.Interaction):
+        await interaction.response.send_message(f"Sie haben {self.values} ausgewählt")
+
+class ChanelSelectMenu(discord.ui.ChannelSelect):
+    def __init__(self):
+        super().__init__(placeholder="Wähle einen Textchannel aus.", channel_types=[discord.ChannelType.text], max_values=1)
+
+    async def callback(self, interaction: discord.Interaction):
+        await interaction.response.defer()
+        channel = await self.values[0].fetch()
+        await channel.send("Was geht?")
+
+class SelectionView(discord.ui.View):
+    def __init__(self):
+        super().__init__(timeout=None)
+        self.add_item(SelectMenu())
+        self.add_item(ChanelSelectMenu())
 
 class Messages(commands.Cog):
 
@@ -74,6 +99,10 @@ class Messages(commands.Cog):
     @app_commands.command(name="music")
     async def music(self, interaction: discord.Interaction):
         await interaction.response.send_message(view=MusicView(self.bot))
+
+    @app_commands.command(name="selection")
+    async def selection(self, interaction: discord.Interaction):
+        await interaction.response.send_message(view=SelectionView())
 
 async def setup(bot):
     await bot.add_cog(Messages(bot))
