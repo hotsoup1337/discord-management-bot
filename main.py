@@ -31,8 +31,6 @@ class Client(commands.Bot):
             password=os.getenv(("DB.PW"))
         )
 
-        print(mydb)
-
         #with open('banned_members.json', 'r') as banned_member_file:  # umbauen in Datenbank, statt JSON
         #    self.banned_members = json.load(banned_member_file)
 
