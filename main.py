@@ -8,9 +8,12 @@ from discord.ext import tasks, commands
 
 import os
 from dotenv import load_dotenv
-from Cogs import Messages
+from cogs import Messages
+
+import mysql.connector
 
 class Client(commands.Bot):
+    load_dotenv("settings.env")
 
     #def __int__(self, intents):
         #super().__init__(command_prefix="!", intents=intents)      #unwichtig? kann man unten beim run definieren....
@@ -18,7 +21,17 @@ class Client(commands.Bot):
     #ban_words = ["Blödmann", "Musterstrasse 12 Frankfurt 069"]
 
     async def on_ready(self):
+
+
         print("Bot is ready to go!")
+
+        mydb = mysql.connector.connect(
+            host=os.getenv("DB.HOST"),
+            user=os.getenv("DB.USER"),
+            password=os.getenv(("DB.PW"))
+        )
+
+        print(mydb)
 
         #with open('banned_members.json', 'r') as banned_member_file:  # umbauen in Datenbank, statt JSON
         #    self.banned_members = json.load(banned_member_file)
@@ -28,7 +41,7 @@ class Client(commands.Bot):
         #await self.checkMessages()
 
         #await self.add_cog(Messages.Messages(self))
-        await self.load_extension("Cogs.Messages")
+        await self.load_extension("cogs.Messages")
         #await self.checkMessages()
         await self.tree.sync()
 
@@ -231,5 +244,4 @@ class Client(commands.Bot):
 
 intents = discord.Intents.all()
 client = Client(command_prefix="!", intents=intents)
-load_dotenv("settings.env")
 client.run(os.getenv('TOKEN'))

@@ -27,16 +27,6 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `MET11`.`grade`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `MET11`.`grade` (
-  `idgrade` INT NOT NULL,
-  `grade` INT NOT NULL,
-  PRIMARY KEY (`idgrade`))
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
 -- Table `MET11`.`teacher`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `MET11`.`teacher` (
@@ -70,11 +60,10 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `MET11`.`student_has_lesson` (
   `student_idstudent` INT NOT NULL,
   `lesson_idlesson` INT NOT NULL,
-  `grade_idgrade` INT NOT NULL,
+  `grade` INT NOT NULL,
   PRIMARY KEY (`student_idstudent`, `lesson_idlesson`),
   INDEX `fk_student_has_lesson_lesson1_idx` (`lesson_idlesson` ASC),
   INDEX `fk_student_has_lesson_student_idx` (`student_idstudent` ASC),
-  INDEX `fk_student_has_lesson_grade1_idx` (`grade_idgrade` ASC),
   CONSTRAINT `fk_student_has_lesson_student`
     FOREIGN KEY (`student_idstudent`)
     REFERENCES `MET11`.`student` (`idstudent`)
@@ -83,11 +72,6 @@ CREATE TABLE IF NOT EXISTS `MET11`.`student_has_lesson` (
   CONSTRAINT `fk_student_has_lesson_lesson1`
     FOREIGN KEY (`lesson_idlesson`)
     REFERENCES `MET11`.`lesson` (`idlesson`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_student_has_lesson_grade1`
-    FOREIGN KEY (`grade_idgrade`)
-    REFERENCES `MET11`.`grade` (`idgrade`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
