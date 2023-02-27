@@ -2,6 +2,9 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 
+import mysql.connector
+import os
+
 
 class MusicButton(discord.ui.Button):
     def __init__(self, text, buttonStyle, mode, bot):
@@ -95,6 +98,27 @@ class Messages(commands.Cog):
     async def on_deletemessages_error(self, interaction: discord.Interaction, error: app_commands.AppCommandError):
         if isinstance(error, app_commands.MissingRole):
             await interaction.response.send_message(str("Dir fehlt die Rolle!"), ephemeral=True)
+
+    @app_commands.command(name="test_insert", description="Test insert to database")
+    @app_commands.checks.has_role("Leiter")
+    async def testinsert(self, interaction: discord.Interaction, insert_value: str, member: discord.Member=None):
+
+        mydb = mysql.connector.connect(
+            host=os.getenv("DB.HOST"),
+            user=os.getenv("DB.USER"),
+            password=os.getenv("DB.PW"),
+            database=os.getenv("DB")
+        )
+
+        mycursor = mydb.cursor()
+
+        sql = "INSERT INTO student VALUES(%s, %s, %s)"
+        val = ((int("2")), "Benjamin", "Finck")
+        mycursor.execute(sql, val)
+
+        mydb.commit()
+
+        await interaction.response.send_message(str(mycursor.rowcount) + " rows inserted")
 
     @app_commands.command(name="music")
     async def music(self, interaction: discord.Interaction):
