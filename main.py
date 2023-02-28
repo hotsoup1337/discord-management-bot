@@ -8,7 +8,7 @@ from discord.ext import tasks, commands
 
 import os
 from dotenv import load_dotenv
-from cogs import Messages
+from cogs import messages
 
 import mysql.connector
 
