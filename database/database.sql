@@ -16,13 +16,31 @@ CREATE SCHEMA IF NOT EXISTS `MET11` DEFAULT CHARACTER SET utf8 ;
 USE `MET11` ;
 
 -- -----------------------------------------------------
+-- Table `MET11`.`discord_user`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `MET11`.`discord_user` (
+  `iddiscord_user` INT NOT NULL,
+  `username` VARCHAR(45) NOT NULL,
+  `userdiscriminator` INT NOT NULL,
+  PRIMARY KEY (`iddiscord_user`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
 -- Table `MET11`.`student`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `MET11`.`student` (
   `idstudent` INT NOT NULL,
   `first_name` VARCHAR(45) NOT NULL,
   `last_name` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`idstudent`))
+  `discord_user_iddiscord_user` INT NOT NULL,
+  PRIMARY KEY (`idstudent`),
+  INDEX `fk_student_discord_user1_idx` (`discord_user_iddiscord_user` ASC),
+  CONSTRAINT `fk_student_discord_user1`
+    FOREIGN KEY (`discord_user_iddiscord_user`)
+    REFERENCES `MET11`.`discord_user` (`iddiscord_user`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
