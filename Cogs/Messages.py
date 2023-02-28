@@ -33,6 +33,7 @@ class MusicButton(discord.ui.Button):
         elif self.mode == 3:
             voice_client.stop()
             await voice_client.disconnect()
+            await interaction.message.delete()
 
 class MusicView(discord.ui.View):
     def __init__(self, bot):
@@ -86,7 +87,7 @@ class Messages(commands.Cog):
     @app_commands.checks.has_role("Leiter")
     async def deletemessages(self, interaction: discord.Interaction, number: int, member: discord.Member=None):
         delete_counter = 0
-        await interaction.response.send_message(str("Wird gemacht!"), ephemeral=True)
+        await interaction.response.send_message(str("Wird gemacht!"), delete_after=3, ephemeral=True)
         async for message in interaction.channel.history():
             if message.author == member or member == None:
                 await message.delete()
@@ -113,7 +114,7 @@ class Messages(commands.Cog):
         mycursor = mydb.cursor()
 
         sql = "INSERT INTO student VALUES(%s, %s, %s)"
-        val = ((int("2")), "Benjamin", "Finck")
+        val = ((int("2")), "TEST", "TEST")
         mycursor.execute(sql, val)
 
         mydb.commit()
