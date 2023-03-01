@@ -46,7 +46,7 @@ class grade_overview(commands.Cog):
         mycursor = mydb.cursor()
 
         sql = "SELECT iduser FROM discord_user WHERE iduser=%s"
-        val = (interaction.user.id)
+        val = (str(interaction.user.id))
 
 
         mycursor.execute(sql, val)
