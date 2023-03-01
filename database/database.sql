@@ -19,7 +19,7 @@ USE `MET11` ;
 -- Table `MET11`.`discord_user`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `MET11`.`discord_user` (
-  `iddiscord_user` INT NOT NULL,
+  `iddiscord_user` VARCHAR(45) NOT NULL,
   `username` VARCHAR(45) NOT NULL,
   `userdiscriminator` INT NOT NULL,
   PRIMARY KEY (`iddiscord_user`))
@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS `MET11`.`student` (
   `idstudent` INT NOT NULL,
   `first_name` VARCHAR(45) NOT NULL,
   `last_name` VARCHAR(45) NOT NULL,
-  `discord_user_iddiscord_user` INT NOT NULL,
+  `discord_user_iddiscord_user` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`idstudent`),
   INDEX `fk_student_discord_user1_idx` (`discord_user_iddiscord_user` ASC),
   CONSTRAINT `fk_student_discord_user1`
