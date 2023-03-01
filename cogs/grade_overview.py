@@ -45,12 +45,14 @@ class grade_overview(commands.Cog):
 
         mycursor = mydb.cursor()
 
-        sql = "SELECT iduser FROM discord_user WHERE iduser=%s"
-        val = (str(interaction.user.id))
+        sql = "SELECT iddiscord_user FROM discord_user WHERE iddiscord_user = %s"
+        val = str(interaction.user.id)
 
+        mycursor.execute(sql, (val,)) # (val,) tuple
+        myresult = mycursor.fetchall()
+        user_id = str(myresult[0])
 
-        mycursor.execute(sql, val)
-        interaction.response.send_message("successful")
+        await interaction.response.send_message(user_id[2:20]) # substring the result to the length of the discord user id and send it to the channel
 
 async def setup(bot):
     await bot.add_cog(grade_overview(bot))
