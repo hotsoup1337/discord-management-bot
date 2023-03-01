@@ -32,11 +32,9 @@ class grade_overview(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @app_commands.command
-
     @app_commands.command(name="note_eintragen", description="Note eintragen")
-    @app_commands.checks.has_role("MET11")
-    async def insert_grade(self, interaction: discord.Integration, lesson: str, grade: int, member: discord.Member=None):
+    @app_commands.checks.has_role("MET 11")
+    async def insert_grade(self, interaction: discord.Interaction, lesson: str, grade: int, member: discord.Member=None):
 
         mydb = mysql.connector.connect(
             host=os.getenv("DB.HOST"),
@@ -44,15 +42,15 @@ class grade_overview(commands.Cog):
             password=os.getenv("DB.PW"),
             database=os.getenv("DB")
         )
-        try:
-            mycursor = mydb.cursor()
-        except mysql.connector.Error as err:
-            if err.errno == errorcode.ER_BAD_TABLE_ERROR:
-                print("Creating table spam")
-            else:
+
+        mycursor = mydb.cursor()
+
         sql = "SELECT iduser FROM discord_user WHERE iduser=%s"
-        val = (int(member.id))
+        val = (interaction.user.id)
+
+
         mycursor.execute(sql, val)
+        interaction.response.send_message("successful")
 
-        mydb.commit()
-
+async def setup(bot):
+    await bot.add_cog(grade_overview(bot))
