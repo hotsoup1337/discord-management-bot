@@ -8,7 +8,3 @@ Ultimately, I want to create a system that works for me and my classmates.
 As I am currently studying Mechnical Engineering in Germany.
 
 I do this as a hobby!
-
-## Ideas I want to work on
-- [ ]  https://github.com/hotsoup1337/Discord-Management-Bot/issues/1
-
