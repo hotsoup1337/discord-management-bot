@@ -17,6 +17,30 @@ class PageButton(discord.ui.Button):
 class HelpView(discord.ui.View):
     def __init__(self, bot):
         super().__init__(timeout=None)
+        self.add_item(PageButton("Vorwärts", discord.ButtonStyle.primary, 0, bot))
+        self.add_item(PageButton("Rückwärts", discord.ButtonStyle.primary, 0, bot))
 
-    async def callback(self, interaction: discord.Interaction):
-        await interaction.response.send_message("Embed here")
+class help(commands.Cog):
+
+    def __init__(self, bot):
+        self.bot = bot
+
+    @app_commands.command(name="help", description="Zeigt die Hilfe an", aliases=["hilfe"])
+    @app_commands.checks.has_role("MET 11")
+    async def help(self, interaction: discord.Interaction, member: discord.Member=None):
+
+        helpInfoCard = discord.Embed(title="Hilfe-Panel")
+        helpInfoCard.color = discord.Color.blurple()
+        helpInfoCard.description = "Hilfe für jegliche Befehle, einfach blättern."
+        helpInfoCard.set_author(name=bot.user.name, icon_url=bot.display_avatar.url)
+
+        helpInfoCard.add_field(
+            name="Test",
+            value="Test"
+            inline=False
+        )
+
+        await message.channel.send(embed=helpInfoCard)
+
+async def setup(bot):
+    await bot.add_cog(help(bot))
