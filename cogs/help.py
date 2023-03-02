@@ -12,9 +12,7 @@ class PageButton(discord.ui.Button):
     async def callback(self, interaction: discord.Interaction):
 
         await interaction.respone.defer()
-
-class C
-
+        
 
 class HelpView(discord.ui.View):
     def __init__(self, bot):
