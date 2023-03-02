@@ -17,7 +17,7 @@ class SelectMenuLesson(discord.ui.Select):
 
     async def callback(self, interaction: discord.Interaction):
         # load into the database
-        await interaction.respone.send_message("Test")
+        await interaction.response.send_message("Test")
 
 
 class SelectionLessonView(discord.ui.View):
