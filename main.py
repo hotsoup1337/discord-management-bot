@@ -43,6 +43,7 @@ class Client(commands.Bot):
         #await self.add_cog(Messages.Messages(self))
         await self.load_extension("cogs.messages")
         await self.load_extension("cogs.grade_overview")
+        await self.load_extension("cogs.help")
         #await self.checkMessages()
         await self.tree.sync()
 
