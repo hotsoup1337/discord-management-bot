@@ -27,7 +27,7 @@ class help(commands.Cog):
 
     @app_commands.command(name="help", description="Zeigt die Hilfe an", aliases=["hilfe"])
     @app_commands.checks.has_role("MET 11")
-    async def help(self, interaction: discord.Interaction, member: discord.Member=None):
+    async def help(self, bot, interaction: discord.Interaction, member: discord.Member=None):
 
         helpInfoCard = discord.Embed(title="Hilfe-Panel")
         helpInfoCard.color = discord.Color.blurple()
@@ -36,11 +36,11 @@ class help(commands.Cog):
 
         helpInfoCard.add_field(
             name="Test",
-            value="Test"
+            value="Test",
             inline=False
         )
 
-        await message.channel.send(embed=helpInfoCard)
+        await interaction.response.send_message(embed=helpInfoCard)
 
 async def setup(bot):
     await bot.add_cog(help(bot))
