@@ -25,13 +25,13 @@ class Client(commands.Bot):
 
         print("Bot is ready to go!")
 
-        mydb = mysql.connector.connect(
-            host=os.getenv("DB.HOST"),
-            user=os.getenv("DB.USER"),
-            password=os.getenv(("DB.PW"))
-        )
+        #mydb = mysql.connector.connect(
+        #    host=os.getenv("DB.HOST"),
+        #    user=os.getenv("DB.USER"),
+        #    password=os.getenv(("DB.PW"))
+        #)
 
-        print(f"Database connection successfully established.", mydb)
+        #print(f"Database connection successfully established.", mydb)
 
         #with open('banned_members.json', 'r') as banned_member_file:  # umbauen in Datenbank, statt JSON
         #    self.banned_members = json.load(banned_member_file)

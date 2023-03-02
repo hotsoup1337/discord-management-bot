@@ -54,7 +54,7 @@ class SelectMenu(discord.ui.Select):
     async def callback(self, interaction: discord.Interaction):
         await interaction.response.send_message(f"Sie haben {self.values} ausgewählt")
 
-class ChanelSelectMenu(discord.ui.ChannelSelect):
+class ChannelSelectMenu(discord.ui.ChannelSelect):
     def __init__(self):
         super().__init__(placeholder="Wähle einen Textchannel aus.", channel_types=[discord.ChannelType.text], max_values=1)
 
@@ -67,7 +67,7 @@ class SelectionView(discord.ui.View):
     def __init__(self):
         super().__init__(timeout=None)
         self.add_item(SelectMenu())
-        self.add_item(ChanelSelectMenu())
+        self.add_item(ChannelSelectMenu())
 
 class Messages(commands.Cog):
 
