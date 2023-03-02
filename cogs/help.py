@@ -2,6 +2,8 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 
+import mysql.connector
+import os
 
 class PageButton(discord.ui.Button):
     def __init__(self, text, buttonStyle, mode, bot):
@@ -35,8 +37,8 @@ class help(commands.Cog):
         helpInfoCard.set_author(name=bot.user.name, icon_url=bot.display_avatar.url)
 
         helpInfoCard.add_field(
-            name="Test",
-            value="Test",
+            name="Note Eintragen",
+            value="Hier findest du Hilfe, um deine Note vernünftig einzutragen!",
             inline=False
         )
 
