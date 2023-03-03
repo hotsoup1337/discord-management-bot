@@ -17,9 +17,9 @@ class LinkView(discord.ui.View):
         super().__init__(timeout=None)
         self.add_item(LinkButton("Change.org", discord.ButtonStyle.primary))
 
-class Messages(commands.Cog):
+class stop_willow_project(commands.Cog):
 
-    def __init__(self):
+    def __init__(self, bot):
         self.bot = bot
 
     @app_commands.command(name="stop-willow", description="Share the petition for stop willow")
@@ -32,6 +32,6 @@ class Messages(commands.Cog):
             await interaction.response.send_message(view=LinkView(self.bot))
 
 async def setup(bot):
-    await bot.add_cog(Messages())
+    await bot.add_cog(stop_willow_project(bot))
         
     
