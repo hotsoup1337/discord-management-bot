@@ -32,6 +32,7 @@ class Messages(commands.Cog):
         else:
             await interaction.response.send_message(view=LinkView(self.bot))
 
-    
+async def setup(bot):
+    await bot.add_cog(Messages(bot))
         
     
