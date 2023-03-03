@@ -4,9 +4,8 @@ from discord.ext import commands
 
 
 class LinkButton(discord.ui.Button):
-    def __init__(self, text, buttonStyle, bot):
+    def __init__(self, text, buttonStyle):
         super().__init__(label=text, style=buttonStyle)
-        self.bot = bot
 
     async def callback(self, interaction: discord.Interaction):
 
@@ -14,9 +13,9 @@ class LinkButton(discord.ui.Button):
 
 
 class LinkView(discord.ui.View):
-    def __init__(self, bot):
+    def __init__(self):
         super().__init__(timeout=None)
-        self.add_item(LinkButton("Change.org", discord.ButtonStyle.primary, bot))
+        self.add_item(LinkButton("Change.org", discord.ButtonStyle.primary))
 
 class Messages(commands.Cog):
 
@@ -33,6 +32,6 @@ class Messages(commands.Cog):
             await interaction.response.send_message(view=LinkView(self.bot))
 
 async def setup(bot):
-    await bot.add_cog(Messages(bot))
+    await bot.add_cog(Messages())
         
     
