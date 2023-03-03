@@ -24,12 +24,12 @@ class stop_willow_project(commands.Cog):
 
     @app_commands.command(name="stop-willow", description="Share the petition for stop willow")
     @app_commands.checks.has_role("MET 11")
-    async def stop_willow(self, interaction: discord.Interaction):
+    async def stop_willow(self, interaction: discord.Interaction, error: app_commands.AppCommandError):
         if isinstance(error, app_commands.MissingRole):
             await interaction.response.send_message(str("Missing permissions!", ephmeral=True, delete_after=3))
 
         else:
-            await interaction.response.send_message(view=LinkView(self.bot))
+            await interaction.response.send_message(view=LinkView())
 
 async def setup(bot):
     await bot.add_cog(stop_willow_project(bot))
