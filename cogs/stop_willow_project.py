@@ -4,8 +4,8 @@ from discord.ext import commands
 
 
 class LinkButton(discord.ui.Button):
-    def __init__(self, text, buttonStyle):
-        super().__init__(label=text, style=buttonStyle)
+    def __init__(self, text, buttonStyle, url):
+        super().__init__(label=text, style=buttonStyle, url=url)
 
     async def callback(self, interaction: discord.Interaction):
 
@@ -15,7 +15,7 @@ class LinkButton(discord.ui.Button):
 class LinkView(discord.ui.View):
     def __init__(self):
         super().__init__(timeout=None)
-        self.add_item(LinkButton("Change.org", discord.ButtonStyle.primary))
+        self.add_item(LinkButton("Change.org", discord.ButtonStyle.primary, url="https://chng.it/5WSrNMvsKM"))
 
 class stop_willow_project(commands.Cog):
 
@@ -24,12 +24,8 @@ class stop_willow_project(commands.Cog):
 
     @app_commands.command(name="stop-willow", description="Share the petition for stop willow")
     @app_commands.checks.has_role("MET 11")
-    async def stop_willow(self, interaction: discord.Interaction, error: app_commands.AppCommandError):
-        if isinstance(error, app_commands.MissingRole):
-            await interaction.response.send_message(str("Missing permissions!", ephmeral=True, delete_after=3))
-
-        else:
-            await interaction.response.send_message(view=LinkView())
+    async def stop_willow(self, interaction: discord.Interaction):
+        await interaction.response.send_message(view=LinkView())
 
 async def setup(bot):
     await bot.add_cog(stop_willow_project(bot))
