@@ -6,10 +6,21 @@ from discord.ext import commands
 class LinkButton(discord.ui.Button):
     def __init__(self, text, buttonStyle, mode, url):
         super().__init__(label=text, style=buttonStyle, url=url)
+        self.mode = mode
 
     async def callback(self, interaction: discord.Interaction):
 
         await interaction.response.defer()
+
+        if self.mode == 1:
+
+            InfoCard = discord.Embed(title="STOPPT DAS WILLOW PROJEKT")
+            InfoCard.color = discord.Color.blue()
+            InfoCard.set_thumbnail(url="https://assets.change.org/photos/9/wz/db/MzWzDBcSvRDWZcW-800x450-noPad.jpg?1677633256")
+            InfoCard.description = "Der Willow Master Development Plan ist das größte vorgeschlagene Ölerschließungsprojekt auf öffentlichem Grund. Willow würde jährlich mehr Klimaschadstoffe ausstoßen als mehr als 99,7 % aller punktuellen Quellen im ganzen Land. Dieses Projekt würde das Iñupiat-Dorf Nuiqsut vollständig mit Ölvorkommen umschließen und die Gesundheitsrisiken für die Gemeinde und die umliegende Umwelt erhöhen. Obwohl die Mehrheit der Iñupiat dieses Projekt befürwortet, gibt es immer noch viele Iñupiat und andere arktische Ureinwohner, die gegen dieses Projekt und seine Folgen sind. In Anbetracht der Sorgen um die Umwelt, das Klima und die indigenen Gemeinschaften ist es wichtig, dass das Willow-Projekt abgelehnt wird."
+            InfoCard.set_footer(text="Klicke den Button an, wenn du unterschreiben möchtest!")
+
+            await interaction.message.edit(embed=InfoCard, view=LinkView().remove_item(1))
 
 
 class LinkView(discord.ui.View):
