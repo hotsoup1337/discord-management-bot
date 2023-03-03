@@ -4,7 +4,7 @@ from discord.ext import commands
 
 
 class LinkButton(discord.ui.Button):
-    def __init__(self, text, buttonStyle, url):
+    def __init__(self, text, buttonStyle, mode, url):
         super().__init__(label=text, style=buttonStyle, url=url)
 
     async def callback(self, interaction: discord.Interaction):
@@ -15,7 +15,12 @@ class LinkButton(discord.ui.Button):
 class LinkView(discord.ui.View):
     def __init__(self):
         super().__init__(timeout=None)
-        self.add_item(LinkButton("Change.org", discord.ButtonStyle.primary, url="https://chng.it/5WSrNMvsKM"))
+        self.add_item(LinkButton("Change.org", discord.ButtonStyle.primary, 0, url="https://chng.it/5WSrNMvsKM"))
+        self.add_item(LinkButton("Probleme mit Englisch? Klicke hier!", discord.ButtonStyle.primary, 1, url=None))
+
+    async def callback(self, interaction: discord.Interaction):
+
+        await interaction.response.defer()
 
 class stop_willow_project(commands.Cog):
 
