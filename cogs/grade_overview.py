@@ -124,7 +124,7 @@ class SelectLessonMenu(discord.ui.Select):
                     insert_into_shl_sql = "INSERT INTO student_has_lesson VALUES(null, %s, %s, %s)"
                     insert_into_shl_val = (id_student, id_lesson, self.grade)
                     insert_into_shl.execute(insert_into_shl_sql, insert_into_shl_val)
-                    
+
                     mydb.commit()
 
 class SelectLessonView(discord.ui.View):
@@ -196,8 +196,12 @@ class grade_overview(commands.Cog):
 
         # create a new list and strip the string
         for a, b in grade_overview_result:
-            lessons.append(str(a).strip('(,)'))
+            if a not in lessons:
+                lessons.append(str(a).strip('(,)'))
             grades.append(str(b).strip('(,)'))
+
+            print(lessons, grades)
+
 
 
 
