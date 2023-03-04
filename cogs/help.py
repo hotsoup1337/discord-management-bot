@@ -13,14 +13,18 @@ class PageButton(discord.ui.Button):
     
     async def callback(self, interaction: discord.Interaction):
 
-        await interaction.respone.defer()
+        await interaction.response.defer()
+
+        if self.mode == 0:
+
+
 
 
 class HelpView(discord.ui.View):
     def __init__(self, bot):
         super().__init__(timeout=None)
         self.add_item(PageButton("Vorwärts", discord.ButtonStyle.primary, 0, bot))
-        self.add_item(PageButton("Rückwärts", discord.ButtonStyle.primary, 0, bot))
+        self.add_item(PageButton("Rückwärts", discord.ButtonStyle.primary, 1, bot))
 
 class help(commands.Cog):
 
