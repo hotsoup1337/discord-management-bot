@@ -5,26 +5,6 @@ from discord.ext import commands
 import mysql.connector
 import os
 
-class SelectMenuLesson(discord.ui.Select):
-    def __init__(self):
-        super().__init__(placeholder="Wähle ein Lernfeld aus.", max_values=1, min_values=1)
-        # add for loop -> every lesson in database and add an option
-        # label = lesson name
-        # description = teacher form_of_address + name
-        self.add_option(label="Lernfeld Test", description="Herr Mustermann")
-
-        # how to save the selected lesson together with the selected grade?
-
-    async def callback(self, interaction: discord.Interaction):
-        # load into the database
-        await interaction.response.send_message("Test")
-
-class SelectionLessonView(discord.ui.View):
-    def __init__(self):
-        super().__init__(timeout=None)
-        self.add_item(SelectMenuLesson())
-        #self.add_item()
-
 class RegisterMenuButton(discord.ui.Button):
     def __init__(self, text, buttonStyle, mode):
         super().__init__(label=text, style=buttonStyle)
@@ -32,6 +12,9 @@ class RegisterMenuButton(discord.ui.Button):
 
     async def callback(self, interaction: discord.Interaction):
         await interaction.response.defer()
+
+        if self.mode == 1:
+            await interaction.message.edit(content="Prozess abgebrochen!", delete_after=5)
 
 class RegisterMenuView(discord.ui.View):
     def __init__(self):
