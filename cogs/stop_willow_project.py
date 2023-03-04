@@ -43,7 +43,7 @@ class LinkViewEnglisch(discord.ui.View):
 
         await interaction.response.defer()
 
-class LinkViewDeutsch(discord.ui.view):
+class LinkViewDeutsch(discord.ui.View):
     def __init__(self):
         super().__init__(timeout=None)
         self.add_item(LinkButton("Change.org", discord.ButtonStyle.primary, 0, url="https://chng.it/5WSrNMvsKM"))
