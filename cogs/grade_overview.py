@@ -50,9 +50,14 @@ class grade_overview(commands.Cog):
 
         mycursor.execute(sql, (val,)) # (val,) tuple
         myresult = mycursor.fetchall()
-        user_id = str(myresult[0])
+        if not myresult:
+            await interaction.response.send_message("Couldn't find user!")
+        else:
+            user_id = str(myresult[0])
+            await interaction.response.send_message(user_id[2:20])  # substring the result to the length of the discord user id and send it to the channel
 
-        await interaction.response.send_message(user_id[2:20]) # substring the result to the length of the discord user id and send it to the channel
+
+
 
 async def setup(bot):
     await bot.add_cog(grade_overview(bot))
