@@ -19,12 +19,19 @@ class SelectMenuLesson(discord.ui.Select):
         # load into the database
         await interaction.response.send_message("Test")
 
-
 class SelectionLessonView(discord.ui.View):
     def __init__(self):
         super().__init__(timeout=None)
         self.add_item(SelectMenuLesson())
         #self.add_item()
+
+class RegisterMenuButton(discord.ui.Button):
+    def __init__(self, text, buttonStyle, mode):
+        super().__init__(label=text, style=buttonStyle)
+        self.mode = mode
+
+    async def callback(self, interaction: discord.Interaction):
+        await interaction.response.defer()
 
 
 class grade_overview(commands.Cog):
@@ -51,7 +58,7 @@ class grade_overview(commands.Cog):
         mycursor.execute(sql, (val,)) # (val,) tuple
         myresult = mycursor.fetchall()
         if not myresult:
-            await interaction.response.send_message("Couldn't find user!")
+            await interaction.response.send_message("Das System konnte dich nicht finden, bist du nicht registriert? \n Wenn du dich registrieren möchtest, dann klicke auf den Button!")
         else:
             user_id = str(myresult[0])
             await interaction.response.send_message(user_id[2:20])  # substring the result to the length of the discord user id and send it to the channel
