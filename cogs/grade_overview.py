@@ -11,7 +11,10 @@ class RegisterMenuButton(discord.ui.Button):
         self.mode = mode
 
     async def callback(self, interaction: discord.Interaction):
-        await interaction.response.defer()
+
+        if self.mode == 0:
+            await interaction.message.delete()
+            await interaction.response.send_modal(RegisterUserModal())
 
         if self.mode == 1:
             await interaction.message.edit(content="Prozess abgebrochen!", delete_after=5)
@@ -22,8 +25,32 @@ class RegisterMenuView(discord.ui.View):
         self.add_item(RegisterMenuButton("Registriere dich hier!", discord.ButtonStyle.primary, 0))
         self.add_item(RegisterMenuButton("Abbrechen", discord.ButtonStyle.red, 1))
 
+class RegisterUserModal(discord.ui.Modal):
 
+    def __init__(self):
+        super().__init__(title="Registrierungsformular")
 
+    first_name = discord.ui.TextInput(label="Vorname", style=discord.TextStyle.short, placeholder="Bitte Vornamen eintragen..", required=True)
+    last_name = discord.ui.TextInput(label="Nachname", style=discord.TextStyle.short, placeholder="Bitte Nachnamen eintragen..", required=True)
+
+    async def on_submit(self, interaction: discord.Interaction):
+
+        mydb = mysql.connector.connect(
+            host=os.getenv("DB.HOST"),
+            user=os.getenv("DB.USER"),
+            password=os.getenv("DB.PW"),
+            database=os.getenv("DB")
+        )
+
+        mycursor = mydb.cursor()
+
+        sql = "INSERT INTO student VALUES(NULL, %s, %s)"
+        val = (self.first_name.value, self.last_name.value)
+        mycursor.execute(sql, val)
+
+        mydb.commit()
+
+        await interaction.response.send_message(f'Du wurdest erfolgreich als {self.first_name.value} {self.last_name.value},  registriert!', ephemeral=True)
 class grade_overview(commands.Cog):
 
     def __init__(self, bot):
