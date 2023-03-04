@@ -73,46 +73,16 @@ class SelectLessonMenu(discord.ui.Select):
         )
 
         select_teachers = mydb.cursor()
-        select_lessons = mydb.cursor()
 
-        select_teachers_sql = "SELECT form_of_address, name, lesson_name FROM teacher, lesson WHERE teacher.idteacher = lesson.teacher_idteacher"
+        select_teachers_sql = "SELECT form_of_address, name, lesson_name FROM teacher, lesson WHERE teacher.idteacher = lesson.teacher_idteacher ORDER BY lesson_name"
         select_teachers.execute(select_teachers_sql)
 
-        select_teacher_result = select_teachers.fetchall()
+        select_teachers_result = select_teachers.fetchall()
 
-        select_lessons_sql = "SELECT lesson_name FROM lesson"
-        select_lessons.execute(select_lessons_sql)
-
-        select_lessons_result = select_lessons.fetchall()
-
-        print(select_teacher_result, select_lessons_result)
-
-        list_lessons = []
-        index_lessons = 0
-
-        list_teachers = []
-        index_teachers = 0
-
-        for i in select_lessons_result:
-            list_lessons.append(i)
-
-            lesson = ''.join(list_lessons[index_lessons])
-
-            self.add_option(label=lesson)
-
-            index_lessons += 1
-
-            #for ii in select_teacher_result:
-            #    list_teachers.append(ii)
-            #    teacher = "Lehrer: " + ' '.join(list_teachers[index_teachers])
-
-
-            #    index_teachers += 1
-
-            #    self.add_option(label=lesson, description=teacher)
-            #    print(index_lessons, index_teachers)
-            #    print(list_teachers[0], list_lessons[0])
-
+        for a, b, c in select_teachers_result:
+            teacher = a + " " + b
+            lesson = c
+            self.add_option(label=lesson, description=teacher)
 
 class SelectLessonView(discord.ui.View):
     def __init__(self):
