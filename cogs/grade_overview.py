@@ -122,7 +122,7 @@ class SelectLessonMenu(discord.ui.Select):
                     insert_into_shl = mydb.cursor()
 
                     # shl = student_has_lesson
-                    insert_into_shl_sql = "INSERT INTO student_has_lesson VALUES(%s, %s, %s)"
+                    insert_into_shl_sql = "INSERT IGNORE INTO student_has_lesson VALUES(%s, %s, %s)"
                     insert_into_shl_val = (id_student, id_lesson, self.grade)
                     insert_into_shl.execute(insert_into_shl_sql, insert_into_shl_val)
 
@@ -159,9 +159,9 @@ class grade_overview(commands.Cog):
             mycursor.execute(sql, (val,)) # (val,) tuple
             myresult = mycursor.fetchall()
             if not myresult:
-                await interaction.response.send_message("Das System konnte dich nicht finden, bist du nicht registriert? \n Wenn du dich registrieren möchtest, dann klicke auf den Button!", view=RegisterMenuView())
+                await interaction.response.send_message("Das System konnte dich nicht finden, bist du nicht registriert? \n Wenn du dich registrieren möchtest, dann klicke auf den Button!", view=RegisterMenuView(), ephemeral=True)
             else:
-                await interaction.response.send_message(view=SelectLessonView(note))
+                await interaction.response.send_message(view=SelectLessonView(note), ephemeral=True)
 
         else:
             await interaction.response.send_message("Bitte gebe eine richtige Note an.", ephemeral=True, delete_after=3)
