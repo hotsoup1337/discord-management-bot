@@ -72,7 +72,24 @@ class SelectLessonMenu(discord.ui.Select):
             database=os.getenv("DB")
         )
 
+        select_lesson = mydb.cursor()
 
+        select_lesson_sql = "SELECT form_of_address, name FROM teacher"
+        select_lesson.execute(select_lesson_sql)
+
+        select_lesson_result = select_lesson.fetchall()
+
+        list_lessons = []
+
+        for i in select_lesson_result:
+            list_lessons.append(i)
+
+        print(list_lessons)
+
+class SelectLessonView(discord.ui.View):
+    def __init__(self):
+        super().__init__(timeout=None)
+        self.add_item(SelectLessonMenu())
 
 class grade_overview(commands.Cog):
 
@@ -101,7 +118,7 @@ class grade_overview(commands.Cog):
             await interaction.response.send_message("Das System konnte dich nicht finden, bist du nicht registriert? \n Wenn du dich registrieren möchtest, dann klicke auf den Button!", view=RegisterMenuView())
         else:
             user_id = str(myresult[0])
-            await interaction.response.send_message(user_id[2:20])  # substring the result to the length of the discord user id and send it to the channel
+            await interaction.response.send_message(SelectLessonView())  # substring the result to the length of the discord user id and send it to the channel
 
 
 
