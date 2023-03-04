@@ -62,7 +62,7 @@ class RegisterUserModal(discord.ui.Modal):
         await interaction.response.send_message(f'Du wurdest erfolgreich als: "{self.first_name.value} {self.last_name.value}",  registriert!', ephemeral=True)
 
 class SelectLessonMenu(discord.ui.Select):
-    def __init__(self):
+    def __init__(self, grade: int):
         super().__init__(placeholder="Wähle ein Lernfeld aus", max_values=1, min_values=1)
 
         mydb = mysql.connector.connect(
@@ -84,10 +84,22 @@ class SelectLessonMenu(discord.ui.Select):
             lesson = c
             self.add_option(label=lesson, description=teacher)
 
+    async def callback(self, interaction: discord.Interaction):
+
+        mydb = mysql.connector.connect(
+            host=os.getenv("DB.HOST"),
+            user=os.getenv("DB.USER"),
+            password=os.getenv("DB.PW"),
+            database=os.getenv("DB")
+        )
+
+        
+
+
 class SelectLessonView(discord.ui.View):
-    def __init__(self):
+    def __init__(self, grade: int):
         super().__init__(timeout=None)
-        self.add_item(SelectLessonMenu())
+        self.add_item(SelectLessonMenu(grade))
 
 class grade_overview(commands.Cog):
 
@@ -96,7 +108,7 @@ class grade_overview(commands.Cog):
 
     @app_commands.command(name="note_eintragen", description="Note eintragen")
     @app_commands.checks.has_role("MET 11")
-    async def insert_grade(self, interaction: discord.Interaction, grade: int):
+    async def insert_grade(self, interaction: discord.Interaction, Note: int):
 
         mydb = mysql.connector.connect(
             host=os.getenv("DB.HOST"),
@@ -115,7 +127,7 @@ class grade_overview(commands.Cog):
         if not myresult:
             await interaction.response.send_message("Das System konnte dich nicht finden, bist du nicht registriert? \n Wenn du dich registrieren möchtest, dann klicke auf den Button!", view=RegisterMenuView())
         else:
-            await interaction.response.send_message(view=SelectLessonView())
+            await interaction.response.send_message(view=SelectLessonView(Note))
 
 
 
