@@ -95,14 +95,34 @@ class SelectLessonMenu(discord.ui.Select):
 
         for a in self.values:
 
-            select_id = mydb.cursor()
+            print(a)
+            select_lesson_id = mydb.cursor()
 
-            select_id_sql = "SELECT idlesson FROM lesson WHERE lesson_name = %s"
-            select_id.execute(select_id_sql, a)
+            select_lesson_id_sql = "SELECT idlesson FROM lesson WHERE lesson_name = %s"
+            select_lesson_id.execute(select_lesson_id_sql, a)
 
-            select_id_result = select_id.fetchall()
+            select_lesson_id_result = select_lesson_id.fetchall()
 
-            
+            for b in select_lesson_id_result:
+
+                print(b)
+                select_student_id = mydb.cursor()
+
+                select_student_id_sql = "SELECT idstudent FROM student, discord_user WHERE student.discord_user_iddiscord_user = %s"
+                select_student_id_val = str(interaction.user.id)
+                select_student_id.execute(select_student_id_sql, select_student_id_val)
+
+                select_student_id_result = select_student_id.fetchall()
+
+                for c in select_student_id_result:
+
+                    print(c)
+                    insert_into_shl = mydb.cursor()
+
+                    # shl = student_has_lesson
+                    insert_into_shl_sql = "INSERT INTO student_has_lesson "
+
+
 
 
 class SelectLessonView(discord.ui.View):
