@@ -17,6 +17,7 @@ class RegisterMenuButton(discord.ui.Button):
             await interaction.response.send_modal(RegisterUserModal())
 
         if self.mode == 1:
+            await interaction.response.defer()
             await interaction.message.edit(content="Prozess abgebrochen!", delete_after=5)
 
 class RegisterMenuView(discord.ui.View):
@@ -42,15 +43,37 @@ class RegisterUserModal(discord.ui.Modal):
             database=os.getenv("DB")
         )
 
-        mycursor = mydb.cursor()
+        user_discord_insert = mydb.cursor()
 
-        sql = "INSERT INTO student VALUES(NULL, %s, %s)"
-        val = (self.first_name.value, self.last_name.value)
-        mycursor.execute(sql, val)
+        user_discord_insert_sql = "INSERT INTO discord_user VALUES(%s, %s, %s)"
+        user_discord_insert_val = (str(interaction.user.id), interaction.user.name, interaction.user.discriminator)
+        user_discord_insert.execute(user_discord_insert_sql, user_discord_insert_val)
 
         mydb.commit()
 
-        await interaction.response.send_message(f'Du wurdest erfolgreich als {self.first_name.value} {self.last_name.value},  registriert!', ephemeral=True)
+        user_student_insert = mydb.cursor()
+
+        user_student_insert_sql = "INSERT INTO student VALUES(NULL, %s, %s, %s)"
+        user_student_insert_val = (self.first_name.value, self.last_name.value, str(interaction.user.id))
+        user_student_insert.execute(user_student_insert_sql, user_student_insert_val)
+
+        mydb.commit()
+
+        await interaction.response.send_message(f'Du wurdest erfolgreich als: "{self.first_name.value} {self.last_name.value}",  registriert!', ephemeral=True)
+
+class SelectLessonMenu(discord.ui.Select):
+    def __init__(self):
+        super().__init__(placeholder="Wähle ein Lernfeld aus", max_values=1, min_values=1)
+
+        mydb = mysql.connector.connect(
+            host=os.getenv("DB.HOST"),
+            user=os.getenv("DB.USER"),
+            password=os.getenv("DB.PW"),
+            database=os.getenv("DB")
+        )
+
+
+
 class grade_overview(commands.Cog):
 
     def __init__(self, bot):
@@ -58,7 +81,7 @@ class grade_overview(commands.Cog):
 
     @app_commands.command(name="note_eintragen", description="Note eintragen")
     @app_commands.checks.has_role("MET 11")
-    async def insert_grade(self, interaction: discord.Interaction, lesson: str, grade: int, member: discord.Member=None):
+    async def insert_grade(self, interaction: discord.Interaction, grade: int):
 
         mydb = mysql.connector.connect(
             host=os.getenv("DB.HOST"),

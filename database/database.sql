@@ -48,7 +48,7 @@ ENGINE = InnoDB;
 -- Table `MET11`.`teacher`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `MET11`.`teacher` (
-  `idteacher` INT NOT NULL,
+  `idteacher` INT NOT NULL AUTO_INCREMENT,
   `form_of_address` VARCHAR(45) NOT NULL,
   `name` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`idteacher`))
@@ -59,7 +59,7 @@ ENGINE = InnoDB;
 -- Table `MET11`.`lesson`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `MET11`.`lesson` (
-  `idlesson` INT NOT NULL,
+  `idlesson` INT NOT NULL AUTO_INCREMENT,
   `teacher_idteacher` INT NOT NULL,
   `lesson_name` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`idlesson`),
