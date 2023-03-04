@@ -64,6 +64,7 @@ class RegisterUserModal(discord.ui.Modal):
 class SelectLessonMenu(discord.ui.Select):
     def __init__(self, grade: int):
         super().__init__(placeholder="Wähle ein Lernfeld aus", max_values=1, min_values=1)
+        self.grade = grade
 
         mydb = mysql.connector.connect(
             host=os.getenv("DB.HOST"),
@@ -95,35 +96,37 @@ class SelectLessonMenu(discord.ui.Select):
 
         for a in self.values:
 
-            print(a)
             select_lesson_id = mydb.cursor()
 
             select_lesson_id_sql = "SELECT idlesson FROM lesson WHERE lesson_name = %s"
-            select_lesson_id.execute(select_lesson_id_sql, a)
+            select_lesson_id.execute(select_lesson_id_sql, (a,))
 
             select_lesson_id_result = select_lesson_id.fetchall()
 
             for b in select_lesson_id_result:
 
-                print(b)
+                id_lesson = str(b).strip('(,)')
+
                 select_student_id = mydb.cursor()
 
                 select_student_id_sql = "SELECT idstudent FROM student, discord_user WHERE student.discord_user_iddiscord_user = %s"
                 select_student_id_val = str(interaction.user.id)
-                select_student_id.execute(select_student_id_sql, select_student_id_val)
+                select_student_id.execute(select_student_id_sql, (select_student_id_val,))
 
                 select_student_id_result = select_student_id.fetchall()
 
                 for c in select_student_id_result:
 
-                    print(c)
+                    id_student = str(c).strip('(,)')
+
                     insert_into_shl = mydb.cursor()
 
                     # shl = student_has_lesson
-                    insert_into_shl_sql = "INSERT INTO student_has_lesson "
+                    insert_into_shl_sql = "INSERT INTO student_has_lesson VALUES(%s, %s, %s)"
+                    insert_into_shl_val = (id_student, id_lesson, self.grade)
+                    insert_into_shl.execute(insert_into_shl_sql, insert_into_shl_val)
 
-
-
+                    mydb.commit()
 
 class SelectLessonView(discord.ui.View):
     def __init__(self, grade: int):
