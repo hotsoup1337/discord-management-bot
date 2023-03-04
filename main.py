@@ -25,13 +25,13 @@ class Client(commands.Bot):
 
         print("Bot is ready to go!")
 
-        mydb = mysql.connector.connect(
-            host=os.getenv("DB.HOST"),
-            user=os.getenv("DB.USER"),
-            password=os.getenv(("DB.PW"))
-        )
+        #mydb = mysql.connector.connect(
+        #    host=os.getenv("DB.HOST"),
+        #    user=os.getenv("DB.USER"),
+        #   password=os.getenv(("DB.PW"))
+        #)
 
-        print(f"Database connection successfully established.", mydb)
+        #print(f"Database connection successfully established.", mydb)
 
         #with open('banned_members.json', 'r') as banned_member_file:  # umbauen in Datenbank, statt JSON
         #    self.banned_members = json.load(banned_member_file)
@@ -43,6 +43,7 @@ class Client(commands.Bot):
         #await self.add_cog(Messages.Messages(self))
         await self.load_extension("cogs.messages")
         await self.load_extension("cogs.grade_overview")
+        await self.load_extension("cogs.stop_willow_project")
         #await self.checkMessages()
         await self.tree.sync()
 
