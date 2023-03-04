@@ -93,7 +93,16 @@ class SelectLessonMenu(discord.ui.Select):
             database=os.getenv("DB")
         )
 
-        
+        for a in self.values:
+
+            select_id = mydb.cursor()
+
+            select_id_sql = "SELECT idlesson FROM lesson WHERE lesson_name = %s"
+            select_id.execute(select_id_sql, a)
+
+            select_id_result = select_id.fetchall()
+
+            
 
 
 class SelectLessonView(discord.ui.View):
@@ -108,27 +117,31 @@ class grade_overview(commands.Cog):
 
     @app_commands.command(name="note_eintragen", description="Note eintragen")
     @app_commands.checks.has_role("MET 11")
-    async def insert_grade(self, interaction: discord.Interaction, Note: int):
+    async def insert_grade(self, interaction: discord.Interaction, note: int):
 
-        mydb = mysql.connector.connect(
-            host=os.getenv("DB.HOST"),
-            user=os.getenv("DB.USER"),
-            password=os.getenv("DB.PW"),
-            database=os.getenv("DB")
-        )
+        if note <= 6:
 
-        mycursor = mydb.cursor()
+            mydb = mysql.connector.connect(
+                host=os.getenv("DB.HOST"),
+                user=os.getenv("DB.USER"),
+                password=os.getenv("DB.PW"),
+                database=os.getenv("DB")
+            )
 
-        sql = "SELECT iddiscord_user FROM discord_user WHERE iddiscord_user = %s"
-        val = str(interaction.user.id)
+            mycursor = mydb.cursor()
 
-        mycursor.execute(sql, (val,)) # (val,) tuple
-        myresult = mycursor.fetchall()
-        if not myresult:
-            await interaction.response.send_message("Das System konnte dich nicht finden, bist du nicht registriert? \n Wenn du dich registrieren möchtest, dann klicke auf den Button!", view=RegisterMenuView())
+            sql = "SELECT iddiscord_user FROM discord_user WHERE iddiscord_user = %s"
+            val = str(interaction.user.id)
+
+            mycursor.execute(sql, (val,)) # (val,) tuple
+            myresult = mycursor.fetchall()
+            if not myresult:
+                await interaction.response.send_message("Das System konnte dich nicht finden, bist du nicht registriert? \n Wenn du dich registrieren möchtest, dann klicke auf den Button!", view=RegisterMenuView())
+            else:
+                await interaction.response.send_message(view=SelectLessonView(note))
+
         else:
-            await interaction.response.send_message(view=SelectLessonView(Note))
-
+            await interaction.response.send_message("Bitte gebe eine richtige Note an.", ephemeral=True, delete_after=3)
 
 
 
