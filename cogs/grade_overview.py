@@ -166,6 +166,18 @@ class grade_overview(commands.Cog):
         else:
             await interaction.response.send_message("Bitte gebe eine richtige Note an.", ephemeral=True, delete_after=3)
 
+    @app_commands.command(name="noten_übersicht", description="Notenübersicht anzeigen")
+    @app_commands.checks.has_role("MET 11")
+    async def show_grade_overview(self, interaction: discord.Interaction):
+
+        mydb = mysql.connector.connect(
+            host=os.getenv("DB.HOST"),
+            user=os.getenv("DB.USER"),
+            password=os.getenv("DB.PW"),
+            database=os.getenv("DB")
+        )
+
+        
 
 
 async def setup(bot):
