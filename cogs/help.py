@@ -27,7 +27,7 @@ class help(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @app_commands.command(name="help", description="Zeigt die Hilfe an", aliases=["hilfe"])
+    @app_commands.command(name="help", description="Zeigt die Hilfe an")
     @app_commands.checks.has_role("MET 11")
     async def help(self, bot, interaction: discord.Interaction, member: discord.Member=None):
 
