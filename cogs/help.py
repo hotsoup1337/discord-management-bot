@@ -13,7 +13,7 @@ class PageButton(discord.ui.Button):
     
     async def callback(self, interaction: discord.Interaction):
 
-        await interaction.respone.defer()
+        await interaction.response.defer()
 
         if self.mode == 1: 
             await interaction.message.edit()

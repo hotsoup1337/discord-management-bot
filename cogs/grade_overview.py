@@ -72,19 +72,45 @@ class SelectLessonMenu(discord.ui.Select):
             database=os.getenv("DB")
         )
 
-        select_lesson = mydb.cursor()
+        select_teachers = mydb.cursor()
+        select_lessons = mydb.cursor()
 
-        select_lesson_sql = "SELECT form_of_address, name FROM teacher"
-        select_lesson.execute(select_lesson_sql)
+        select_teachers_sql = "SELECT form_of_address, name FROM teacher, lesson WHERE teacher.idteacher = lesson.teacher_idteacher"
+        select_teachers.execute(select_teachers_sql)
 
-        select_lesson_result = select_lesson.fetchall()
+        select_teacher_result = select_teachers.fetchall()
+
+        select_lessons_sql = "SELECT lesson_name FROM lesson"
+        select_lessons.execute(select_lessons_sql)
+
+        select_lessons_result = select_lessons.fetchall()
+
+        print(select_teacher_result, select_lessons_result)
+
+        list_teachers = []
+        index_teachers = 0
 
         list_lessons = []
+        index_lessons = index_teachers
 
-        for i in select_lesson_result:
-            list_lessons.append(i)
+        for i in select_teacher_result:
+            list_teachers.append(i)
+            teacher = "Lehrer: " + ' '.join(list_teachers[index_teachers])
 
-        print(list_lessons)
+            index_teachers += 1
+
+            for ii in select_lessons_result:
+                list_lessons.append(ii)
+                lesson = ' '.join(list_lessons[index_lessons])
+
+                index_lessons = index_teachers
+
+                self.add_option(label=lesson, description=teacher)
+
+
+
+
+
 
 class SelectLessonView(discord.ui.View):
     def __init__(self):
@@ -117,8 +143,7 @@ class grade_overview(commands.Cog):
         if not myresult:
             await interaction.response.send_message("Das System konnte dich nicht finden, bist du nicht registriert? \n Wenn du dich registrieren möchtest, dann klicke auf den Button!", view=RegisterMenuView())
         else:
-            user_id = str(myresult[0])
-            await interaction.response.send_message(SelectLessonView())  # substring the result to the length of the discord user id and send it to the channel
+            await interaction.response.send_message(view=SelectLessonView())
 
 
 
