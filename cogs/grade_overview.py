@@ -33,6 +33,13 @@ class RegisterMenuButton(discord.ui.Button):
     async def callback(self, interaction: discord.Interaction):
         await interaction.response.defer()
 
+class RegisterMenuView(discord.ui.View):
+    def __init__(self):
+        super().__init__(timeout=None)
+        self.add_item(RegisterMenuButton("Registriere dich hier!", discord.ButtonStyle.primary, 0))
+        self.add_item(RegisterMenuButton("Abbrechen", discord.ButtonStyle.red, 1))
+
+
 
 class grade_overview(commands.Cog):
 
@@ -58,7 +65,7 @@ class grade_overview(commands.Cog):
         mycursor.execute(sql, (val,)) # (val,) tuple
         myresult = mycursor.fetchall()
         if not myresult:
-            await interaction.response.send_message("Das System konnte dich nicht finden, bist du nicht registriert? \n Wenn du dich registrieren möchtest, dann klicke auf den Button!")
+            await interaction.response.send_message("Das System konnte dich nicht finden, bist du nicht registriert? \n Wenn du dich registrieren möchtest, dann klicke auf den Button!", view=RegisterMenuView())
         else:
             user_id = str(myresult[0])
             await interaction.response.send_message(user_id[2:20])  # substring the result to the length of the discord user id and send it to the channel
