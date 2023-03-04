@@ -13,7 +13,6 @@ class RegisterMenuButton(discord.ui.Button):
     async def callback(self, interaction: discord.Interaction):
 
         if self.mode == 0:
-            await interaction.message.delete()
             await interaction.response.send_modal(RegisterUserModal())
 
         if self.mode == 1:
@@ -109,7 +108,7 @@ class SelectLessonMenu(discord.ui.Select):
 
                 select_student_id = mydb.cursor()
 
-                select_student_id_sql = "SELECT idstudent FROM student, discord_user WHERE student.discord_user_iddiscord_user = %s"
+                select_student_id_sql = "SELECT idstudent FROM student st JOIN discord_user d ON st.discord_user_iddiscord_user = d.iddiscord_user WHERE d.iddiscord_user = %s"
                 select_student_id_val = str(interaction.user.id)
                 select_student_id.execute(select_student_id_sql, (select_student_id_val,))
 
@@ -122,10 +121,10 @@ class SelectLessonMenu(discord.ui.Select):
                     insert_into_shl = mydb.cursor()
 
                     # shl = student_has_lesson
-                    insert_into_shl_sql = "INSERT IGNORE INTO student_has_lesson VALUES(%s, %s, %s)"
+                    insert_into_shl_sql = "INSERT INTO student_has_lesson VALUES(null, %s, %s, %s)"
                     insert_into_shl_val = (id_student, id_lesson, self.grade)
                     insert_into_shl.execute(insert_into_shl_sql, insert_into_shl_val)
-
+                    
                     mydb.commit()
 
 class SelectLessonView(discord.ui.View):
@@ -159,7 +158,7 @@ class grade_overview(commands.Cog):
             mycursor.execute(sql, (val,)) # (val,) tuple
             myresult = mycursor.fetchall()
             if not myresult:
-                await interaction.response.send_message("Das System konnte dich nicht finden, bist du nicht registriert? \n Wenn du dich registrieren möchtest, dann klicke auf den Button!", view=RegisterMenuView(), ephemeral=True)
+                await interaction.response.send_message("Das System konnte dich nicht finden, bist du nicht registriert? \n Wenn du dich registrieren möchtest, dann klicke auf den Button!", view=RegisterMenuView(), ephemeral=True, delete_after=15)
             else:
                 await interaction.response.send_message(view=SelectLessonView(note), ephemeral=True)
 
@@ -177,7 +176,39 @@ class grade_overview(commands.Cog):
             database=os.getenv("DB")
         )
 
-        
+        user = interaction.user
+
+        grade_overview_embed = discord.Embed(title="Notenübersicht")
+        grade_overview_embed.color = discord.Color.green()
+        grade_overview_embed.set_thumbnail(url=user.display_avatar.url)
+        grade_overview_embed.set_author(name=user.name, icon_url=user.display_avatar.url)
+
+        select_grade = mydb.cursor()
+
+        select_grade_sql = "SELECT lesson_name, grade FROM lesson l JOIN student_has_lesson shl ON l.idlesson = shl.lesson_idlesson JOIN student s ON s.idStudent = shl.student_idstudent JOIN discord_user d ON d.iddiscord_user = s.discord_user_iddiscord_user WHERE d.iddiscord_user = %s"
+        select_grade_val = str(interaction.user.id)
+        select_grade.execute(select_grade_sql, (select_grade_val,))
+
+        grade_overview_result = select_grade.fetchall() # returns a list
+
+        lessons = []
+        grades = []
+
+        # create a new list and strip the string
+        for a, b in grade_overview_result:
+            lessons.append(str(a).strip('(,)'))
+            grades.append(str(b).strip('(,)'))
+
+
+
+
+
+
+
+
+
+
+
 
 
 async def setup(bot):

@@ -21,7 +21,7 @@ USE `MET11` ;
 CREATE TABLE IF NOT EXISTS `MET11`.`discord_user` (
   `iddiscord_user` VARCHAR(45) NOT NULL,
   `username` VARCHAR(45) NOT NULL,
-  `userdiscriminator` INT NOT NULL,
+  `userdiscriminator` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`iddiscord_user`))
 ENGINE = InnoDB;
 
@@ -76,12 +76,13 @@ ENGINE = InnoDB;
 -- Table `MET11`.`student_has_lesson`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `MET11`.`student_has_lesson` (
+  `idstudent_has_lesson` INT NOT NULL AUTO_INCREMENT,
   `student_idstudent` INT NOT NULL,
   `lesson_idlesson` INT NOT NULL,
   `grade` INT NOT NULL,
-  PRIMARY KEY (`student_idstudent`, `lesson_idlesson`),
   INDEX `fk_student_has_lesson_lesson1_idx` (`lesson_idlesson` ASC),
   INDEX `fk_student_has_lesson_student_idx` (`student_idstudent` ASC),
+  PRIMARY KEY (`idstudent_has_lesson`),
   CONSTRAINT `fk_student_has_lesson_student`
     FOREIGN KEY (`student_idstudent`)
     REFERENCES `MET11`.`student` (`idstudent`)
