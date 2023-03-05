@@ -169,9 +169,8 @@ class grade_overview(commands.Cog):
 
     @app_commands.command(name="noten_übersicht", description="Notenübersicht anzeigen")
     @app_commands.checks.has_role("MET 11")
-    async def show_grade_overview(self, interaction: discord.Interaction, bot):
+    async def show_grade_overview(self, interaction: discord.Interaction):
 
-        self.bot = bot
 
         mydb = mysql.connector.connect(
             host=os.getenv("DB.HOST"),
