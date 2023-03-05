@@ -5,6 +5,8 @@ from discord.ext import commands
 import mysql.connector
 import os
 
+import re
+
 class RegisterMenuButton(discord.ui.Button):
     def __init__(self, text, buttonStyle, mode):
         super().__init__(label=text, style=buttonStyle)
@@ -194,6 +196,7 @@ class grade_overview(commands.Cog):
         lessons = []
 
         grades = []
+        grades_ = ""
 
         # create a new list and strip the string
         for a in select_lesson_result:
@@ -202,7 +205,6 @@ class grade_overview(commands.Cog):
             if lesson not in lessons:
 
                 lessons.append(lesson)
-                print(lessons)
 
                 select_lesson_id = mydb.cursor()
 
@@ -218,21 +220,26 @@ class grade_overview(commands.Cog):
                     select_grades.execute(select_grades_sql, select_grades_val)
 
                     for b in select_grades:
-                        grades.append(b)
+                        grade = str(b).strip("['(,)']")
+
+                        grades.append(grade)
+
+                grades_converted = ', '.join(grades)
+
 
                 grade_overview_embed.add_field(
                     name=lesson,
-                    value=grades,
+                    value=grades_converted,
                     inline=True
                 )
                 grade_overview_embed.add_field(
-                    name="TEST",
-                    value="TEST",
+                    name="‎ ",
+                    value="Durchschnitt: ...",
                     inline=True
                 )
                 grade_overview_embed.add_field(
-                    name="TEST",
-                    value="TEST",
+                    name="‎ ",
+                    value="‎ ",
                     inline=True
                 )
                 grades.clear()
