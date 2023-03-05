@@ -169,7 +169,9 @@ class grade_overview(commands.Cog):
 
     @app_commands.command(name="noten_übersicht", description="Notenübersicht anzeigen")
     @app_commands.checks.has_role("MET 11")
-    async def show_grade_overview(self, interaction: discord.Interaction):
+    async def show_grade_overview(self, interaction: discord.Interaction, bot):
+
+        self.bot = bot
 
         mydb = mysql.connector.connect(
             host=os.getenv("DB.HOST"),
@@ -184,6 +186,7 @@ class grade_overview(commands.Cog):
         grade_overview_embed.color = discord.Color.green()
         grade_overview_embed.set_thumbnail(url=user.display_avatar.url)
         grade_overview_embed.set_author(name=user.name, icon_url=user.display_avatar.url)
+        grade_overview_embed.set_footer(text=(f"Angefragt von: ", interaction.user.name))
 
         select_lesson = mydb.cursor()
 
