@@ -1,9 +1,4 @@
-import datetime
-import json
-
 import discord
-import pytz
-from dateutil import parser
 from discord.ext import tasks, commands
 
 import os
