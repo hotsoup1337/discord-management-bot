@@ -2,9 +2,6 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 
-import mysql.connector
-import os
-
 class PageButton(discord.ui.Button):
     def __init__(self, text, buttonStyle, mode, bot):
         super().__init__(label=text, style=buttonStyle)
@@ -13,11 +10,10 @@ class PageButton(discord.ui.Button):
     
     async def callback(self, interaction: discord.Interaction):
 
-        await interaction.respone.defer()
+        await interaction.response.defer()
 
         if self.mode == 1: 
             await interaction.message.edit()
-
 
 class HelpView(discord.ui.View):
     def __init__(self, bot):
