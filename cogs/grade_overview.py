@@ -226,6 +226,11 @@ class grade_overview(commands.Cog):
 
                 grades_converted = ', '.join(grades)
 
+                res = 0
+                for i in grades:
+                    res+= int(i)
+
+                avg = str(res/len(grades))
 
                 grade_overview_embed.add_field(
                     name=lesson,
@@ -234,7 +239,7 @@ class grade_overview(commands.Cog):
                 )
                 grade_overview_embed.add_field(
                     name="‎ ",
-                    value="Durchschnitt: ...",
+                    value="Durchschnitt: " + avg[0:4],
                     inline=True
                 )
                 grade_overview_embed.add_field(
