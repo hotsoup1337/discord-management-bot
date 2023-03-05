@@ -80,6 +80,7 @@ CREATE TABLE IF NOT EXISTS `TEST_MET11`.`student_has_lesson` (
   `student_idstudent` INT NOT NULL,
   `lesson_idlesson` INT NOT NULL,
   `grade` INT NOT NULL,
+  `private` TINYINT NULL,
   INDEX `fk_student_has_lesson_lesson1_idx` (`lesson_idlesson` ASC),
   INDEX `fk_student_has_lesson_student_idx` (`student_idstudent` ASC),
   PRIMARY KEY (`idstudent_has_lesson`),
