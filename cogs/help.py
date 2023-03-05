@@ -18,7 +18,6 @@ class PageButton(discord.ui.Button):
         if self.mode == 1: 
             await interaction.message.edit()
 
-
 class HelpView(discord.ui.View):
     def __init__(self, bot):
         super().__init__(timeout=None)

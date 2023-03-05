@@ -5,7 +5,6 @@ from discord.ext import commands
 import mysql.connector
 import os
 
-
 class MusicButton(discord.ui.Button):
     def __init__(self, text, buttonStyle, mode, bot):
         super().__init__(label=text, style=buttonStyle)
@@ -13,12 +12,9 @@ class MusicButton(discord.ui.Button):
         self.bot = bot
 
     async def callback(self, interaction: discord.Interaction):
-        #await interaction.response.send_message("Ich wurde angeklickt!")
-
         await interaction.response.defer()
 
         voice_channel = discord.utils.get(interaction.guild.voice_channels, name="General")
-        #voice_client = await voice_channel.connect()
 
         voice_client = discord.utils.get(self.bot.voice_clients, channel=voice_channel)
         if voice_client == None:
@@ -73,11 +69,6 @@ class Messages(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
-
-    #@commands.Cog.listener()
-    #async def on_message_edit(self, before, after):
-    #    await before.channel.send(f"Before: {before.content}")
-    #    await before.channel.send(f"After: {after.content}")
 
     @commands.command()
     async def test(self, ctx):
