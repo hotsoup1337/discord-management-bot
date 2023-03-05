@@ -2,9 +2,6 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 
-import mysql.connector
-import os
-
 class PageButton(discord.ui.Button):
     def __init__(self, text, buttonStyle, mode, bot):
         super().__init__(label=text, style=buttonStyle)
