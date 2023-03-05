@@ -163,28 +163,6 @@ class Client(commands.Bot):
 
         await self.process_commands(message)
 
-    # Check messages for ban words
-    #async def checkMessages(self):
-    #    server = self.get_guild(1078029337091125270)
-    #    allTextChannels = server.text_channels
-    #    for channel in allTextChannels:
-    #        async for message in channel.history():
-    #            if message.content in self.ban_words:
-    #                await message.delete()
-
-#    async def checkMessage(self, message):
-#        if message.content in self.ban_words:
-#            await message.delete()
-
-            # wird für 20 sekunden gebannt
-
-#            self.banned_members[message.author.id] = str(datetime.datetime.now() + datetime.timedelta(seconds=20))
-
-#            with open('banned_members.json', 'w') as banned_member_file:
- #               json.dump(self.banned_members, banned_member_file)
-
- #           await message.author.ban()
-
     async def on_raw_reaction_add(self, payload):
         # print(payload.guild_id)
         channel = self.get_channel(payload.channel_id)
