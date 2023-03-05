@@ -183,37 +183,62 @@ class grade_overview(commands.Cog):
         grade_overview_embed.set_thumbnail(url=user.display_avatar.url)
         grade_overview_embed.set_author(name=user.name, icon_url=user.display_avatar.url)
 
-        select_grade = mydb.cursor()
+        select_lesson = mydb.cursor()
 
-        select_grade_sql = "SELECT lesson_name, grade FROM lesson l JOIN student_has_lesson shl ON l.idlesson = shl.lesson_idlesson JOIN student s ON s.idStudent = shl.student_idstudent JOIN discord_user d ON d.iddiscord_user = s.discord_user_iddiscord_user WHERE d.iddiscord_user = %s"
-        select_grade_val = str(interaction.user.id)
-        select_grade.execute(select_grade_sql, (select_grade_val,))
+        select_lesson_sql = "SELECT lesson_name FROM lesson l JOIN student_has_lesson shl ON l.idlesson = shl.lesson_idlesson JOIN student s ON s.idStudent = shl.student_idstudent JOIN discord_user d ON d.iddiscord_user = s.discord_user_iddiscord_user WHERE d.iddiscord_user = %s"
+        select_lesson_val = str(interaction.user.id)
+        select_lesson.execute(select_lesson_sql, (select_lesson_val,))
 
-        grade_overview_result = select_grade.fetchall() # returns a list
+        select_lesson_result = select_lesson.fetchall() # returns a list
 
         lessons = []
+
+
         grades = []
 
         # create a new list and strip the string
-        for a, b in grade_overview_result:
+        for a in select_lesson_result:
+            lesson = str(a).strip("'(,)'")
+            print(lesson)
             if a not in lessons:
-                lessons.append(str(a).strip('(,)'))
-            grades.append(str(b).strip('(,)'))
+                lessons.append(lesson)
+
+            select_lesson_id = mydb.cursor()
+
+            select_lesson_id_sql = "SELECT idlesson FROM lesson WHERE lesson_name = %s"
+            select_lesson_id.execute(select_lesson_id_sql, (lesson,))
+
+            for aa in select_lesson_id:
+                select_grades = mydb.cursor()
+
+                select_grades_sql = "SELECT grade FROM lesson l JOIN student_has_lesson shl ON l.idlesson = shl.lesson_idlesson JOIN student s ON s.idStudent = shl.student_idstudent JOIN discord_user d ON d.iddiscord_user = s.discord_user_iddiscord_user WHERE d.iddiscord_user = %s AND l.idlesson = %s"
+                select_grades_val = (str(interaction.user.id), aa)
+                select_grades.execute(select_grades_sql, select_grades_val)
+
+                print(select_grades)
+
+                for b in select_grades:
+                    grades.append(b)
+
+            grade_overview_embed.add_field(
+                name=lesson,
+                value=grades,
+                inline=True
+            )
+            grade_overview_embed.add_field(
+                name="TEST",
+                value="TEST",
+                inline=True
+            )
+            grade_overview_embed.add_field(
+                name="TEST",
+                value="TEST",
+                inline=True
+            )
 
             print(lessons, grades)
 
-
-
-
-
-
-
-
-
-
-
-
-
+        await interaction.response.send_message(embed=grade_overview_embed)
 
 async def setup(bot):
     await bot.add_cog(grade_overview(bot))
