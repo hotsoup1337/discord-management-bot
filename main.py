@@ -8,20 +8,13 @@ from discord.ext import tasks, commands
 
 import os
 from dotenv import load_dotenv
-from cogs import messages
 
 import mysql.connector
 
 class Client(commands.Bot):
     load_dotenv("settings.env")
 
-    #def __int__(self, intents):
-        #super().__init__(command_prefix="!", intents=intents)      #unwichtig? kann man unten beim run definieren....
-
-    #ban_words = ["Blödmann", "Musterstrasse 12 Frankfurt 069"]
-
     async def on_ready(self):
-
 
         print("Bot is ready to go!")
 
@@ -31,20 +24,9 @@ class Client(commands.Bot):
            password=os.getenv(("DB.PW"))
         )
 
-        #print(f"Database connection successfully established.", mydb)
-
-        #with open('banned_members.json', 'r') as banned_member_file:  # umbauen in Datenbank, statt JSON
-        #    self.banned_members = json.load(banned_member_file)
-
-        #self.checkBannedUsers.start()
-
-        #await self.checkMessages()
-
-        #await self.add_cog(Messages.Messages(self))
         await self.load_extension("cogs.messages")
         await self.load_extension("cogs.grade_overview")
         await self.load_extension("cogs.stop_willow_project")
-        #await self.checkMessages()
         await self.tree.sync()
 
         await self.change_presence(status=discord.Status.dnd, activity=discord.Game(" with Documents"))
@@ -54,13 +36,6 @@ class Client(commands.Bot):
         if message.author == self.user:
             return
 
-#        await self.checkMessage(message)
-
-        # print("Message recognized.")
-        # print(message.content)
-        # print(message.author.name)
-        # await message.author.send("Hey this is a private message")
-        # print out user stats
         if message.content.startswith("!stats"):
             completeText = message.content.split(" ")[
                            1:]  # [1:] indicates the code to start from point 1 in the array [0, 1, 2]
@@ -87,7 +62,6 @@ class Client(commands.Bot):
             completeName = ""
             for namePart in completeText:
                 completeName = completeName + " " + namePart
-            # print(completeName.strip()) #delete spaces infront and after string
 
             member = discord.utils.get(message.guild.members, name=completeName.strip())
             allTextChannels = message.guild.text_channels
@@ -97,10 +71,6 @@ class Client(commands.Bot):
             async for message in channel.history():  # this is used for deleting the messages as well but in every text channel of the guild BE CAREFUL WITH THIS
                 if message.author == member:
                     await message.delete()
-
-            # async for message in message.channel.history(limit=20): #messages will be deleted of user in that channel [limit = 20 messages]
-            #    if message.author == member:
-            #        await message.delete()
 
         # Delete messages older than the given date
         if message.content.startswith("!delete messages older"):
