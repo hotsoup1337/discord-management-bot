@@ -265,7 +265,5 @@ class grade_overview(commands.Cog):
         else:
             await interaction.response.send_message(embed=grade_overview_embed, ephemeral=True)
 
-
-
 async def setup(bot):
     await bot.add_cog(grade_overview(bot))
