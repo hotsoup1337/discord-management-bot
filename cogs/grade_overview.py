@@ -123,7 +123,7 @@ class SelectLessonMenu(discord.ui.Select):
                     insert_into_shl = mydb.cursor()
 
                     # shl = student_has_lesson
-                    insert_into_shl_sql = "INSERT INTO student_has_lesson VALUES(null, %s, %s, %s)"
+                    insert_into_shl_sql = "INSERT INTO student_has_lesson VALUES(null, %s, %s, %s, 1)"
                     insert_into_shl_val = (id_student, id_lesson, self.grade)
                     insert_into_shl.execute(insert_into_shl_sql, insert_into_shl_val)
 
@@ -198,7 +198,6 @@ class grade_overview(commands.Cog):
         lessons = []
 
         grades = []
-        grades_ = ""
 
         # create a new list and strip the string
         for a in select_lesson_result:
@@ -252,8 +251,21 @@ class grade_overview(commands.Cog):
                 grades.clear()
         lessons.clear()
 
+        check_if_private = mydb.cursor()
 
-        await interaction.response.send_message(embed=grade_overview_embed)
+        check_if_private_sql = "SELECT private FROM student_has_lesson shl JOIN student s ON shl.student_idstudent = s.idstudent JOIN discord_user d ON d.iddiscord_user = s.discord_user_iddiscord_user WHERE d.iddiscord_user = %s"
+        check_if_private.execute(check_if_private_sql, (str(interaction.user.id),))
+
+        check_if_private_result = check_if_private.fetchone()
+
+        res = int(str(check_if_private_result).strip("['(,)']"))
+
+        if res == 0:
+            await interaction.response.send_message(embed=grade_overview_embed)
+        else:
+            await interaction.response.send_message(embed=grade_overview_embed, ephemeral=True)
+
+
 
 async def setup(bot):
     await bot.add_cog(grade_overview(bot))
