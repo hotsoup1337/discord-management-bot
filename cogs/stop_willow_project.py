@@ -2,14 +2,12 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 
-
 class LinkButton(discord.ui.Button):
     def __init__(self, text, buttonStyle, mode, url):
         super().__init__(label=text, style=buttonStyle, url=url)
         self.mode = mode
 
     async def callback(self, interaction: discord.Interaction):
-
         await interaction.response.defer()
 
         if self.mode == 1:
@@ -31,7 +29,6 @@ class LinkButton(discord.ui.Button):
             InfoCard.set_footer(text="Klicke den Button an, wenn du unterschreiben möchtest!")
 
             await interaction.message.edit(embed=InfoCard, view=LinkViewDeutsch())
-
 
 class LinkViewEnglisch(discord.ui.View):
     def __init__(self):
