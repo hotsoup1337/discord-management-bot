@@ -13,11 +13,11 @@ class Client(commands.Bot):
 
         print("Bot is ready to go!")
 
-        mydb = mysql.connector.connect(
-            host=os.getenv("DB.HOST"),
-            user=os.getenv("DB.USER"),
-           password=os.getenv(("DB.PW"))
-        )
+        #mydb = mysql.connector.connect(
+        #    host=os.getenv("DB.HOST"),
+        #    user=os.getenv("DB.USER"),
+        #   password=os.getenv(("DB.PW"))
+        #)
 
         await self.load_extension("cogs.messages")
         await self.load_extension("cogs.grade_overview")
