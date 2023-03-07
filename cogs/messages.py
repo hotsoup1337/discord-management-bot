@@ -116,9 +116,9 @@ class Messages(commands.Cog):
     async def music(self, interaction: discord.Interaction):
         await interaction.response.send_message(view=MusicView(self.bot))
 
-    @app_commands.command(name="selection")
-    async def selection(self, interaction: discord.Interaction):
-        await interaction.response.send_message(view=SelectionView())
+    #@app_commands.command(name="selection")
+    #async def selection(self, interaction: discord.Interaction):
+    #    await interaction.response.send_message(view=SelectionView())
 
 async def setup(bot):
     await bot.add_cog(Messages(bot))
