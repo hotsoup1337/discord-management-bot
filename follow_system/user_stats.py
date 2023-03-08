@@ -22,7 +22,7 @@ class user_statsMenu(discord.ui.Select):
             database=os.getenv("DB")
         )
 
-        interaction.response.send_message("test2")
+        await interaction.message.edit(content="test2")
 
 class user_statsView(discord.ui.View):
     def __init__(self, interaction):
