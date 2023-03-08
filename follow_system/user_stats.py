@@ -35,11 +35,18 @@ class setup_user_stats(commands.Cog):
 
         await interaction.response.send_message("test")
 
-        members = interaction.guild.members
+        #Method 1
 
-        for a in members:
-            print(a)
+        #members = interaction.guild.members
 
+        #for a in members:
+        #    print(a)
+
+        #print("-------------")
+
+        #Method 2
+        async for member in interaction.guild.fetch_members(limit=3):
+            print(member)
 
 
 
