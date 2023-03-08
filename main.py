@@ -16,12 +16,13 @@ class Client(commands.Bot):
         mydb = mysql.connector.connect(
             host=os.getenv("DB.HOST"),
             user=os.getenv("DB.USER"),
-           password=os.getenv(("DB.PW"))
+            password=os.getenv("DB.PW")
         )
 
         await self.load_extension("cogs.messages")
         await self.load_extension("cogs.grade_overview")
         await self.load_extension("cogs.stop_willow_project")
+        await self.load_extension("follow_system.user_stats")
         await self.tree.sync()
 
         await self.change_presence(status=discord.Status.dnd, activity=discord.Game(" with Documents"))
