@@ -16,7 +16,7 @@ class user_statsMenu(discord.ui.Select):
     async def callback(self, interaction: discord.Interaction):
 
         mydb = mysql.connector.connect(
-            host=os.getenv("DB.USER"),
+            host=os.getenv("DB.HOST"),
             user=os.getenv("DB.USER"),
             password=os.getenv("DB.PW"),
             database=os.getenv("DB")
