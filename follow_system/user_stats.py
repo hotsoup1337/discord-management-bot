@@ -15,7 +15,7 @@ class user_statsMenu(discord.ui.Select):
 
     async def callback(self, interaction: discord.Interaction):
 
-        user_stats_embed = discord.Embed(title="Nutzerstatistik")
+        user_stats_embed = discord.Embed()
         user_stats_embed.color = discord.Color.gold()
 
         mydb = mysql.connector.connect(
@@ -28,16 +28,19 @@ class user_statsMenu(discord.ui.Select):
         for member in self.values:
 
             select_member = mydb.cursor()
-            test = member.split("#")
 
             select_member_sql = "SELECT iddiscord_user FROM discord_user WHERE username = %s"
-            select_member.execute(select_member_sql, member.split("#"))
+            select_member.execute(select_member_sql, (member.split("#", 1)[0],))
 
             select_member_result = select_member.fetchall()
 
             for res in select_member_result:
 
-                await interaction.response.send_message(res)
+                select_student_name = mydb.cursor()
+
+                select_student_name_sql = "SELECT first_name, last_name FROM student s JOIN discord_user d ON s.discord_user_iddiscord_user = d.iddiscord_user WHERE d.iddiscord_user = %s"
+                select_student_name.execute(select_student_name_sql, (str(res).strip("(',')"),))
+
 
 
 class user_statsView(discord.ui.View):
