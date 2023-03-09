@@ -16,7 +16,8 @@ class Client(commands.Bot):
         mydb = mysql.connector.connect(
             host=os.getenv("DB.HOST"),
             user=os.getenv("DB.USER"),
-            password=os.getenv("DB.PW")
+            password=os.getenv("DB.PW"),
+            database=os.getenv("DB")
         )
 
         await self.load_extension("cogs.messages")
