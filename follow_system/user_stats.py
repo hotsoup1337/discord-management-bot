@@ -15,6 +15,9 @@ class user_statsMenu(discord.ui.Select):
 
     async def callback(self, interaction: discord.Interaction):
 
+        user_stats_embed = discord.Embed(title="Nutzerstatistik")
+        user_stats_embed.color = discord.Color.gold()
+
         mydb = mysql.connector.connect(
             host=os.getenv("DB.HOST"),
             user=os.getenv("DB.USER"),
@@ -23,6 +26,8 @@ class user_statsMenu(discord.ui.Select):
         )
 
         await interaction.message.edit(content="test2")
+        for a in enumerate(self.values):
+            print(a[0])
 
 class user_statsView(discord.ui.View):
     def __init__(self, interaction):
