@@ -42,7 +42,6 @@ class user_statsMenu(discord.ui.Select):
                 select_student_name.execute(select_student_name_sql, (str(res).strip("(',')"),))
 
 
-
 class user_statsView(discord.ui.View):
     def __init__(self, interaction):
         super().__init__(timeout=None)
