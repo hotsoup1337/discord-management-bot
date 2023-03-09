@@ -25,9 +25,21 @@ class user_statsMenu(discord.ui.Select):
             database=os.getenv("DB")
         )
 
-        await interaction.message.edit(content="test2")
-        for a in enumerate(self.values):
-            print(a[0])
+        for member in self.values:
+
+            select_member = mydb.cursor()
+            test = member.split("#")
+            print(test)
+
+            select_member_sql = "SELECT iddiscord_user FROM discord_user WHERE username = %s"
+            select_member.execute(select_member_sql, member.split("#"))
+
+            select_member_result = select_member.fetchall()
+
+            for res in select_member_result:
+
+                await interaction.response.send_message(res)
+
 
 class user_statsView(discord.ui.View):
     def __init__(self, interaction):
