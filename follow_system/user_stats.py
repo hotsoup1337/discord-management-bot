@@ -29,7 +29,6 @@ class user_statsMenu(discord.ui.Select):
 
             select_member = mydb.cursor()
             test = member.split("#")
-            print(test)
 
             select_member_sql = "SELECT iddiscord_user FROM discord_user WHERE username = %s"
             select_member.execute(select_member_sql, member.split("#"))
