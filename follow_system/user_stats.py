@@ -41,6 +41,10 @@ class user_statsMenu(discord.ui.Select):
                 select_student_name_sql = "SELECT first_name, last_name FROM student s JOIN discord_user d ON s.discord_user_iddiscord_user = d.iddiscord_user WHERE d.iddiscord_user = %s"
                 select_student_name.execute(select_student_name_sql, (str(res).strip("(',')"),))
 
+                select_student_name_result = select_student_name.fetchall()
+
+                print(select_student_name_result[0])
+
 
 class user_statsView(discord.ui.View):
     def __init__(self, interaction):
