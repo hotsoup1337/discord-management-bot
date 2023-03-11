@@ -265,5 +265,22 @@ class grade_overview(commands.Cog):
         else:
             await interaction.response.send_message(embed=grade_overview_embed, ephemeral=True)
 
+    @app_commands.command(name="lehrer_eintragen", description="Lehrer eintragen")
+    @app_commands.checks.has_role("Leiter")
+    async def insert_teacher(self, interaction: discord.Interaction, form_of_address: str, name: str):
+
+        mydb = mysql.connector.connect(
+            host=os.getenv("DB.HOST"),
+            user=os.getenv("DB.USER"),
+            password=os.getenv("DB.PW"),
+            datbase=os.getenv("DB")
+        )
+
+        teacher_insert = mydb.cursor()
+
+        teacher_insert_sql = "INSERT INTO teacher VALUES(null, %s, %s)"
+        teacher_insert_val = (form_of_address, name)
+        teacher_insert.execute(teacher_insert_sql, teacher_insert_val)
+
 async def setup(bot):
     await bot.add_cog(grade_overview(bot))
