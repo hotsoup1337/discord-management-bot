@@ -5,9 +5,6 @@ from discord.ext import commands
 import mysql.connector
 import os
 
-from itertools import chain
-
-
 class RegisterMenuButton(discord.ui.Button):
     def __init__(self, text, buttonStyle, mode):
         super().__init__(label=text, style=buttonStyle)
