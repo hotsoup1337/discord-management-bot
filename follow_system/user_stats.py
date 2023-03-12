@@ -5,6 +5,8 @@ from discord.ext import commands
 import mysql.connector
 import os
 
+from itertools import chain
+
 class user_statsMenu(discord.ui.Select):
     def __init__(self, interaction):
         super().__init__(placeholder="Wähle einen Nutzer aus")
@@ -44,7 +46,11 @@ class user_statsMenu(discord.ui.Select):
 
                 select_student_name_result = select_student_name.fetchall()
 
-                print(select_student_name_result[0])
+                student_name = list(chain(*select_student_name_result))
+
+                user_stats_embed.title = str(f"{student_name[0]} {student_name[1]}")
+
+        await interaction.response.send_message(embed=user_stats_embed)
 
 
 class user_statsView(discord.ui.View):
