@@ -273,7 +273,7 @@ class grade_overview(commands.Cog):
             host=os.getenv("DB.HOST"),
             user=os.getenv("DB.USER"),
             password=os.getenv("DB.PW"),
-            datbase=os.getenv("DB")
+            database=os.getenv("DB")
         )
 
         teacher_insert = mydb.cursor()
@@ -281,6 +281,8 @@ class grade_overview(commands.Cog):
         teacher_insert_sql = "INSERT INTO teacher VALUES(null, %s, %s)"
         teacher_insert_val = (form_of_address, name)
         teacher_insert.execute(teacher_insert_sql, teacher_insert_val)
+
+        mydb.commit()
 
 async def setup(bot):
     await bot.add_cog(grade_overview(bot))
