@@ -131,14 +131,23 @@ class SelectTeacherMenu(discord.ui.Select):
     def __init__(self):
         super().__init__(placeholder="Wähle einen Lehrer aus.")
 
-    async def callback(self, interaction: discord.Interaction):
-
         mydb = mysql.connector.connect(
             host=os.getenv("DB.HOST"),
             user=os.getenv("DB.USER"),
             password=os.getenv("DB.PW"),
             database=os.getenv("DB")
         )
+
+        list_teachers = mydb.cursor()
+
+        list_teachers_sql = "SELECT form_of_address, name FROM "
+
+
+    #async def callback(self, interaction: discord.Interaction):
+
+
+
+
 
 class SelectLessonView(discord.ui.View):
     def __init__(self, grade: int):
