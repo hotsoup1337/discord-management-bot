@@ -140,7 +140,12 @@ class SelectTeacherMenu(discord.ui.Select):
 
         list_teachers = mydb.cursor()
 
-        list_teachers_sql = "SELECT form_of_address, name FROM "
+        list_teachers_sql = "SELECT form_of_address, name FROM teacher"
+        list_teachers.execute(list_teachers_sql)
+
+        list_teachers_result = list_teachers.fetchall()
+
+
 
 
     #async def callback(self, interaction: discord.Interaction):
