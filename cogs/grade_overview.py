@@ -135,7 +135,6 @@ class SelectLessonMenu(discord.ui.Select):
 
                     mydb.commit()
 
-
 class SelectTeacherMenu(discord.ui.Select):
     def __init__(self, lesson_name: str):
         super().__init__(placeholder="Wähle einen Lehrer aus.")
@@ -155,16 +154,40 @@ class SelectTeacherMenu(discord.ui.Select):
 
         list_teachers_result = list_teachers.fetchall()
 
-        #teacher_form_of_address_and_name = list(chain(*list_teachers_result))
-
         for form_of_address, name in list_teachers_result:
             self.add_option(label=str(f"{form_of_address} {name}"))
 
     async def callback(self, interaction: discord.Interaction):
-        await interaction.response.defer()
 
-        print(self.lesson_name)
+        mydb = mysql.connector.connect(
+            host=os.getenv("DB.HOST"),
+            user=os.getenv("DB.USER"),
+            password=os.getenv("DB.PW"),
+            database=os.getenv("DB")
+        )
 
+        teacher_form_of_address, teacher_name = self.values[0].split(' ', 1)
+
+        select_teacher_id = mydb.cursor()
+
+        select_teacher_id_sql = "SELECT idteacher FROM teacher WHERE form_of_address = %s AND name = %s"
+        select_teacher_id_val = (teacher_form_of_address, teacher_name)
+        select_teacher_id.execute(select_teacher_id_sql, select_teacher_id_val)
+
+        select_teacher_id_result = select_teacher_id.fetchall()
+
+        for IDTEACHER in select_teacher_id_result:
+
+            insert_lesson = mydb.cursor()
+
+            insert_lesson_sql = "INSERT INTO lesson VALUES(null, %s, %s)"
+            insert_lesson_val = (int(str(IDTEACHER).strip("(,)")), self.lesson_name)
+
+            insert_lesson.execute(insert_lesson_sql, insert_lesson_val)
+
+            mydb.commit()
+
+            await interaction.message.edit(content=f"Das Lernfeld: {self.lesson_name} wurde erfolgreich dem Lehrer: {self.values[0]} zugewiesen.", view=None)
 
 class SelectTeacherView(discord.ui.View):
     def __init__(self, lesson_name: str):
