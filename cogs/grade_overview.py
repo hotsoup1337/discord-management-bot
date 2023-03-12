@@ -81,9 +81,9 @@ class SelectLessonMenu(discord.ui.Select):
 
         select_teachers_result = select_teachers.fetchall()
 
-        for a, b, c in select_teachers_result:
-            teacher = a + " " + b
-            lesson = c
+        for form_of_address, name, lesson in select_teachers_result:
+            teacher = form_of_address + " " + name
+            lesson = lesson
             self.add_option(label=lesson, description=teacher)
 
     async def callback(self, interaction: discord.Interaction):
