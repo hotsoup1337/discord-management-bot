@@ -7,6 +7,7 @@ import os
 
 from itertools import chain
 
+
 class RegisterMenuButton(discord.ui.Button):
     def __init__(self, text, buttonStyle, mode):
         super().__init__(label=text, style=buttonStyle)
@@ -21,22 +22,25 @@ class RegisterMenuButton(discord.ui.Button):
             await interaction.response.defer()
             await interaction.message.edit(content="Prozess abgebrochen!", delete_after=5)
 
+
 class RegisterMenuView(discord.ui.View):
     def __init__(self):
         super().__init__(timeout=None)
         self.add_item(RegisterMenuButton("Registriere dich hier!", discord.ButtonStyle.primary, 0))
         self.add_item(RegisterMenuButton("Abbrechen", discord.ButtonStyle.red, 1))
 
+
 class RegisterUserModal(discord.ui.Modal):
 
     def __init__(self):
         super().__init__(title="Registrierungsformular")
 
-    first_name = discord.ui.TextInput(label="Vorname", style=discord.TextStyle.short, placeholder="Bitte Vornamen eintragen..", required=True)
-    last_name = discord.ui.TextInput(label="Nachname", style=discord.TextStyle.short, placeholder="Bitte Nachnamen eintragen..", required=True)
+    first_name = discord.ui.TextInput(label="Vorname", style=discord.TextStyle.short,
+                                      placeholder="Bitte Vornamen eintragen..", required=True)
+    last_name = discord.ui.TextInput(label="Nachname", style=discord.TextStyle.short,
+                                     placeholder="Bitte Nachnamen eintragen..", required=True)
 
     async def on_submit(self, interaction: discord.Interaction):
-
         mydb = mysql.connector.connect(
             host=os.getenv("DB.HOST"),
             user=os.getenv("DB.USER"),
@@ -60,7 +64,10 @@ class RegisterUserModal(discord.ui.Modal):
 
         mydb.commit()
 
-        await interaction.response.send_message(f'Du wurdest erfolgreich als: "{self.first_name.value} {self.last_name.value}",  registriert!', ephemeral=True)
+        await interaction.response.send_message(
+            f'Du wurdest erfolgreich als: "{self.first_name.value} {self.last_name.value}",  registriert!',
+            ephemeral=True)
+
 
 class SelectLessonMenu(discord.ui.Select):
     def __init__(self, grade: int):
@@ -117,7 +124,6 @@ class SelectLessonMenu(discord.ui.Select):
                 select_student_id_result = select_student_id.fetchall()
 
                 for c in select_student_id_result:
-
                     id_student = str(c).strip('(,)')
 
                     insert_into_shl = mydb.cursor()
@@ -129,9 +135,11 @@ class SelectLessonMenu(discord.ui.Select):
 
                     mydb.commit()
 
+
 class SelectTeacherMenu(discord.ui.Select):
-    def __init__(self):
+    def __init__(self, lesson_name: str):
         super().__init__(placeholder="Wähle einen Lehrer aus.")
+        self.lesson_name = lesson_name
 
         mydb = mysql.connector.connect(
             host=os.getenv("DB.HOST"),
@@ -152,14 +160,23 @@ class SelectTeacherMenu(discord.ui.Select):
         for teacher in teacher_form_of_address_and_name:
             self.add_option(label=str(teacher))
 
+    async def callback(self, interaction: discord.Interaction):
+        await interaction.response.defer()
 
-    #async def callback(self, interaction: discord.Interaction):
+        print(self.lesson_name)
+
+
+class SelectTeacherView(discord.ui.View):
+    def __init__(self, lesson_name: str):
+        super().__init__(timeout=None)
+        self.add_item(SelectTeacherMenu(lesson_name))
 
 
 class SelectLessonView(discord.ui.View):
     def __init__(self, grade: int):
         super().__init__(timeout=None)
         self.add_item(SelectLessonMenu(grade))
+
 
 class grade_overview(commands.Cog):
 
@@ -184,10 +201,12 @@ class grade_overview(commands.Cog):
             sql = "SELECT iddiscord_user FROM discord_user WHERE iddiscord_user = %s"
             val = str(interaction.user.id)
 
-            mycursor.execute(sql, (val,)) # (val,) tuple
+            mycursor.execute(sql, (val,))  # (val,) tuple
             myresult = mycursor.fetchall()
             if not myresult:
-                await interaction.response.send_message("Das System konnte dich nicht finden, bist du nicht registriert? \n Wenn du dich registrieren möchtest, dann klicke auf den Button!", view=RegisterMenuView(), ephemeral=True, delete_after=15)
+                await interaction.response.send_message(
+                    "Das System konnte dich nicht finden, bist du nicht registriert? \n Wenn du dich registrieren möchtest, dann klicke auf den Button!",
+                    view=RegisterMenuView(), ephemeral=True, delete_after=15)
             else:
                 await interaction.response.send_message(view=SelectLessonView(note), ephemeral=True)
 
@@ -197,7 +216,6 @@ class grade_overview(commands.Cog):
     @app_commands.command(name="noten_übersicht", description="Notenübersicht anzeigen")
     @app_commands.checks.has_role("MET 11")
     async def show_grade_overview(self, interaction: discord.Interaction):
-
 
         mydb = mysql.connector.connect(
             host=os.getenv("DB.HOST"),
@@ -220,7 +238,7 @@ class grade_overview(commands.Cog):
         select_lesson_val = str(interaction.user.id)
         select_lesson.execute(select_lesson_sql, (select_lesson_val,))
 
-        select_lesson_result = select_lesson.fetchall() # returns a list
+        select_lesson_result = select_lesson.fetchall()  # returns a list
 
         lessons = []
 
@@ -256,9 +274,9 @@ class grade_overview(commands.Cog):
 
                 res = 0
                 for i in grades:
-                    res+= int(i)
+                    res += int(i)
 
-                avg = str(res/len(grades))
+                avg = str(res / len(grades))
 
                 grade_overview_embed.add_field(
                     name=lesson,
@@ -310,6 +328,12 @@ class grade_overview(commands.Cog):
         teacher_insert.execute(teacher_insert_sql, teacher_insert_val)
 
         mydb.commit()
+
+    @app_commands.command(name="lernfeld_eintragen", description="Lernfeld eintragen")
+    @app_commands.checks.has_role("Leiter")
+    async def insert_lesson(self, interaction: discord.Interaction, name: str):
+
+        await interaction.response.send_message(view=SelectTeacherView(name))
 
 
 async def setup(bot):
