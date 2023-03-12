@@ -19,22 +19,25 @@ class RegisterMenuButton(discord.ui.Button):
             await interaction.response.defer()
             await interaction.message.edit(content="Prozess abgebrochen!", delete_after=5)
 
+
 class RegisterMenuView(discord.ui.View):
     def __init__(self):
         super().__init__(timeout=None)
         self.add_item(RegisterMenuButton("Registriere dich hier!", discord.ButtonStyle.primary, 0))
         self.add_item(RegisterMenuButton("Abbrechen", discord.ButtonStyle.red, 1))
 
+
 class RegisterUserModal(discord.ui.Modal):
 
     def __init__(self):
         super().__init__(title="Registrierungsformular")
 
-    first_name = discord.ui.TextInput(label="Vorname", style=discord.TextStyle.short, placeholder="Bitte Vornamen eintragen..", required=True)
-    last_name = discord.ui.TextInput(label="Nachname", style=discord.TextStyle.short, placeholder="Bitte Nachnamen eintragen..", required=True)
+    first_name = discord.ui.TextInput(label="Vorname", style=discord.TextStyle.short,
+                                      placeholder="Bitte Vornamen eintragen..", required=True)
+    last_name = discord.ui.TextInput(label="Nachname", style=discord.TextStyle.short,
+                                     placeholder="Bitte Nachnamen eintragen..", required=True)
 
     async def on_submit(self, interaction: discord.Interaction):
-
         mydb = mysql.connector.connect(
             host=os.getenv("DB.HOST"),
             user=os.getenv("DB.USER"),
@@ -58,7 +61,10 @@ class RegisterUserModal(discord.ui.Modal):
 
         mydb.commit()
 
-        await interaction.response.send_message(f'Du wurdest erfolgreich als: "{self.first_name.value} {self.last_name.value}",  registriert!', ephemeral=True)
+        await interaction.response.send_message(
+            f'Du wurdest erfolgreich als: "{self.first_name.value} {self.last_name.value}",  registriert!',
+            ephemeral=True)
+
 
 class SelectLessonMenu(discord.ui.Select):
     def __init__(self, grade: int):
@@ -79,9 +85,9 @@ class SelectLessonMenu(discord.ui.Select):
 
         select_teachers_result = select_teachers.fetchall()
 
-        for a, b, c in select_teachers_result:
-            teacher = a + " " + b
-            lesson = c
+        for form_of_address, name, lesson in select_teachers_result:
+            teacher = form_of_address + " " + name
+            lesson = lesson
             self.add_option(label=lesson, description=teacher)
 
     async def callback(self, interaction: discord.Interaction):
@@ -115,7 +121,6 @@ class SelectLessonMenu(discord.ui.Select):
                 select_student_id_result = select_student_id.fetchall()
 
                 for c in select_student_id_result:
-
                     id_student = str(c).strip('(,)')
 
                     insert_into_shl = mydb.cursor()
@@ -127,10 +132,71 @@ class SelectLessonMenu(discord.ui.Select):
 
                     mydb.commit()
 
+class SelectTeacherMenu(discord.ui.Select):
+    def __init__(self, lesson_name: str):
+        super().__init__(placeholder="Wähle einen Lehrer aus.")
+        self.lesson_name = lesson_name
+
+        mydb = mysql.connector.connect(
+            host=os.getenv("DB.HOST"),
+            user=os.getenv("DB.USER"),
+            password=os.getenv("DB.PW"),
+            database=os.getenv("DB")
+        )
+
+        list_teachers = mydb.cursor()
+
+        list_teachers_sql = "SELECT form_of_address, name FROM teacher"
+        list_teachers.execute(list_teachers_sql)
+
+        list_teachers_result = list_teachers.fetchall()
+
+        for form_of_address, name in list_teachers_result:
+            self.add_option(label=str(f"{form_of_address} {name}"))
+
+    async def callback(self, interaction: discord.Interaction):
+
+        mydb = mysql.connector.connect(
+            host=os.getenv("DB.HOST"),
+            user=os.getenv("DB.USER"),
+            password=os.getenv("DB.PW"),
+            database=os.getenv("DB")
+        )
+
+        teacher_form_of_address, teacher_name = self.values[0].split(' ', 1)
+
+        select_teacher_id = mydb.cursor()
+
+        select_teacher_id_sql = "SELECT idteacher FROM teacher WHERE form_of_address = %s AND name = %s"
+        select_teacher_id_val = (teacher_form_of_address, teacher_name)
+        select_teacher_id.execute(select_teacher_id_sql, select_teacher_id_val)
+
+        select_teacher_id_result = select_teacher_id.fetchall()
+
+        for IDTEACHER in select_teacher_id_result:
+
+            insert_lesson = mydb.cursor()
+
+            insert_lesson_sql = "INSERT INTO lesson VALUES(null, %s, %s)"
+            insert_lesson_val = (int(str(IDTEACHER).strip("(,)")), self.lesson_name)
+
+            insert_lesson.execute(insert_lesson_sql, insert_lesson_val)
+
+            mydb.commit()
+
+            await interaction.message.edit(content=f"Das Lernfeld: {self.lesson_name} wurde erfolgreich dem Lehrer: {self.values[0]} zugewiesen.", view=None)
+
+class SelectTeacherView(discord.ui.View):
+    def __init__(self, lesson_name: str):
+        super().__init__(timeout=None)
+        self.add_item(SelectTeacherMenu(lesson_name))
+
+
 class SelectLessonView(discord.ui.View):
     def __init__(self, grade: int):
         super().__init__(timeout=None)
         self.add_item(SelectLessonMenu(grade))
+
 
 class grade_overview(commands.Cog):
 
@@ -155,10 +221,12 @@ class grade_overview(commands.Cog):
             sql = "SELECT iddiscord_user FROM discord_user WHERE iddiscord_user = %s"
             val = str(interaction.user.id)
 
-            mycursor.execute(sql, (val,)) # (val,) tuple
+            mycursor.execute(sql, (val,))  # (val,) tuple
             myresult = mycursor.fetchall()
             if not myresult:
-                await interaction.response.send_message("Das System konnte dich nicht finden, bist du nicht registriert? \n Wenn du dich registrieren möchtest, dann klicke auf den Button!", view=RegisterMenuView(), ephemeral=True, delete_after=15)
+                await interaction.response.send_message(
+                    "Das System konnte dich nicht finden, bist du nicht registriert? \n Wenn du dich registrieren möchtest, dann klicke auf den Button!",
+                    view=RegisterMenuView(), ephemeral=True, delete_after=15)
             else:
                 await interaction.response.send_message(view=SelectLessonView(note), ephemeral=True)
 
@@ -168,7 +236,6 @@ class grade_overview(commands.Cog):
     @app_commands.command(name="noten_übersicht", description="Notenübersicht anzeigen")
     @app_commands.checks.has_role("MET 11")
     async def show_grade_overview(self, interaction: discord.Interaction):
-
 
         mydb = mysql.connector.connect(
             host=os.getenv("DB.HOST"),
@@ -191,7 +258,7 @@ class grade_overview(commands.Cog):
         select_lesson_val = str(interaction.user.id)
         select_lesson.execute(select_lesson_sql, (select_lesson_val,))
 
-        select_lesson_result = select_lesson.fetchall() # returns a list
+        select_lesson_result = select_lesson.fetchall()  # returns a list
 
         lessons = []
 
@@ -227,9 +294,9 @@ class grade_overview(commands.Cog):
 
                 res = 0
                 for i in grades:
-                    res+= int(i)
+                    res += int(i)
 
-                avg = str(res/len(grades))
+                avg = str(res / len(grades))
 
                 grade_overview_embed.add_field(
                     name=lesson,
@@ -262,6 +329,32 @@ class grade_overview(commands.Cog):
             await interaction.response.send_message(embed=grade_overview_embed)
         else:
             await interaction.response.send_message(embed=grade_overview_embed, ephemeral=True)
+
+    @app_commands.command(name="lehrer_eintragen", description="Lehrer eintragen")
+    @app_commands.checks.has_role("Leiter")
+    async def insert_teacher(self, interaction: discord.Interaction, form_of_address: str, name: str):
+
+        mydb = mysql.connector.connect(
+            host=os.getenv("DB.HOST"),
+            user=os.getenv("DB.USER"),
+            password=os.getenv("DB.PW"),
+            database=os.getenv("DB")
+        )
+
+        teacher_insert = mydb.cursor()
+
+        teacher_insert_sql = "INSERT INTO teacher VALUES(null, %s, %s)"
+        teacher_insert_val = (form_of_address, name)
+        teacher_insert.execute(teacher_insert_sql, teacher_insert_val)
+
+        mydb.commit()
+
+    @app_commands.command(name="lernfeld_eintragen", description="Lernfeld eintragen")
+    @app_commands.checks.has_role("Leiter")
+    async def insert_lesson(self, interaction: discord.Interaction, name: str):
+
+        await interaction.response.send_message(view=SelectTeacherView(name))
+
 
 async def setup(bot):
     await bot.add_cog(grade_overview(bot))
