@@ -19,6 +19,7 @@ class user_statsMenu(discord.ui.Select):
 
         user_stats_embed = discord.Embed()
         user_stats_embed.color = discord.Color.gold()
+        user_stats_embed.set_footer(text=f"requested by: {interaction.user.name}")
 
         mydb = mysql.connector.connect(
             host=os.getenv("DB.HOST"),
