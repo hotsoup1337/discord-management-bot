@@ -5,8 +5,6 @@ from discord.ext import commands
 import mysql.connector
 import os
 
-import re
-
 class RegisterMenuButton(discord.ui.Button):
     def __init__(self, text, buttonStyle, mode):
         super().__init__(label=text, style=buttonStyle)
@@ -128,6 +126,19 @@ class SelectLessonMenu(discord.ui.Select):
                     insert_into_shl.execute(insert_into_shl_sql, insert_into_shl_val)
 
                     mydb.commit()
+
+class SelectTeacherMenu(discord.ui.Select):
+    def __init__(self):
+        super().__init__(placeholder="Wähle einen Lehrer aus.")
+
+    async def callback(self, interaction: discord.Interaction):
+
+        mydb = mysql.connector.connect(
+            host=os.getenv("DB.HOST"),
+            user=os.getenv("DB.USER"),
+            password=os.getenv("DB.PW"),
+            database=os.getenv("DB")
+        )
 
 class SelectLessonView(discord.ui.View):
     def __init__(self, grade: int):
