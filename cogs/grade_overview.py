@@ -155,10 +155,10 @@ class SelectTeacherMenu(discord.ui.Select):
 
         list_teachers_result = list_teachers.fetchall()
 
-        teacher_form_of_address_and_name = list(chain(*list_teachers_result))
+        #teacher_form_of_address_and_name = list(chain(*list_teachers_result))
 
-        for teacher in teacher_form_of_address_and_name:
-            self.add_option(label=str(teacher))
+        for form_of_address, name in list_teachers_result:
+            self.add_option(label=str(f"{form_of_address} {name}"))
 
     async def callback(self, interaction: discord.Interaction):
         await interaction.response.defer()
