@@ -7,15 +7,12 @@ import os
 
 from itertools import chain
 
-class user_statsMenu(discord.ui.Select):
-    def __init__(self, interaction):
-        super().__init__(placeholder="Wähle einen Nutzer aus")
-        members = interaction.guild.members
+class setup_user_stats(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
 
-        for member in members:
-            self.add_option(label=str(member))
-
-    async def callback(self, interaction: discord.Interaction):
+    @app_commands.command(name="user_stats", description="Statistiken eines Nutzers anzeigen")
+    async def user_stats(self, interaction: discord.Interaction, member: discord.Member):
 
         user_stats_embed = discord.Embed()
         user_stats_embed.color = discord.Color.gold()
@@ -28,45 +25,21 @@ class user_statsMenu(discord.ui.Select):
             database=os.getenv("DB")
         )
 
-        for member in self.values:
+        select_student_name = mydb.cursor()
 
-            select_member = mydb.cursor()
+        select_student_name_sql = "SELECT first_name, last_name FROM student s \
+                        JOIN discord_user d ON s.discord_user_iddiscord_user = d.iddiscord_user WHERE d.iddiscord_user = %s"
+        select_student_name.execute(select_student_name_sql, (str(member.id),))
 
-            select_member_sql = "SELECT iddiscord_user FROM discord_user WHERE username = %s"
-            select_member.execute(select_member_sql, (member.split("#", 1)[0],))
+        select_student_name_result = select_student_name.fetchall()
 
-            select_member_result = select_member.fetchall()
+        student_name = list(chain(*select_student_name_result))
 
-            for res in select_member_result:
-
-                select_student_name = mydb.cursor()
-
-                select_student_name_sql = "SELECT first_name, last_name FROM student s \
-                JOIN discord_user d ON s.discord_user_iddiscord_user = d.iddiscord_user WHERE d.iddiscord_user = %s"
-                select_student_name.execute(select_student_name_sql, (str(res).strip("(',')"),))
-
-                select_student_name_result = select_student_name.fetchall()
-
-                student_name = list(chain(*select_student_name_result))
-
-                user_stats_embed.title = str(f"{student_name[0]} {student_name[1]}")
+        user_stats_embed.title = str(f"{student_name[0]} {student_name[1]}")
 
         await interaction.response.send_message(embed=user_stats_embed)
 
-
-class user_statsView(discord.ui.View):
-    def __init__(self, interaction):
-        super().__init__(timeout=None)
-        self.add_item(user_statsMenu(interaction))
-
-class setup_user_stats(commands.Cog):
-    def __init__(self, bot):
-        self.bot = bot
-
-    @app_commands.command(name="user_stats", description="Statistiken eines Nutzers anzeigen")
-    async def user_stats(self, interaction: discord.Interaction):
-
-        await interaction.response.send_message(view=user_statsView(interaction))
+        #await interaction.response.send_message(view=user_statsView(interaction))
 
 async def setup(bot):
     await bot.add_cog(setup_user_stats(bot))
