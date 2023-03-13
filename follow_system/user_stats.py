@@ -33,11 +33,15 @@ class setup_user_stats(commands.Cog):
 
         select_student_name_result = select_student_name.fetchall()
 
-        student_name = list(chain(*select_student_name_result))
+        if select_student_name_result:
+            student_name = list(chain(*select_student_name_result))
 
-        user_stats_embed.title = str(f"{student_name[0]} {student_name[1]}")
+            user_stats_embed.title = str(f"{student_name[0]} {student_name[1]}")
 
-        await interaction.response.send_message(embed=user_stats_embed)
+            await interaction.response.send_message(embed=user_stats_embed)
+        else:
+            await interaction.response.send_message(f"{member.name} is not registered.")
+
 
         #await interaction.response.send_message(view=user_statsView(interaction))
 
