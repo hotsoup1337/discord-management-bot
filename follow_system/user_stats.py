@@ -25,7 +25,8 @@ class user_statsMenu(discord.ui.Select):
             host=os.getenv("DB.HOST"),
             user=os.getenv("DB.USER"),
             password=os.getenv("DB.PW"),
-            database=os.getenv("DB")
+            database=os.getenv("DB"),
+            port=os.getenv("DB.PORT")
         )
 
         for member in self.values:

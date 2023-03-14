@@ -42,7 +42,8 @@ class RegisterUserModal(discord.ui.Modal):
             host=os.getenv("DB.HOST"),
             user=os.getenv("DB.USER"),
             password=os.getenv("DB.PW"),
-            database=os.getenv("DB")
+            database=os.getenv("DB"),
+            port=os.getenv("DB.PORT")
         )
 
         user_discord_insert = mydb.cursor()
@@ -75,7 +76,8 @@ class SelectLessonMenu(discord.ui.Select):
             host=os.getenv("DB.HOST"),
             user=os.getenv("DB.USER"),
             password=os.getenv("DB.PW"),
-            database=os.getenv("DB")
+            database=os.getenv("DB"),
+            port=os.getenv("DB.PORT")
         )
 
         select_teachers = mydb.cursor()
@@ -96,7 +98,8 @@ class SelectLessonMenu(discord.ui.Select):
             host=os.getenv("DB.HOST"),
             user=os.getenv("DB.USER"),
             password=os.getenv("DB.PW"),
-            database=os.getenv("DB")
+            database=os.getenv("DB"),
+            port=os.getenv("DB.PORT")
         )
 
         for a in self.values:
@@ -141,7 +144,8 @@ class SelectTeacherMenu(discord.ui.Select):
             host=os.getenv("DB.HOST"),
             user=os.getenv("DB.USER"),
             password=os.getenv("DB.PW"),
-            database=os.getenv("DB")
+            database=os.getenv("DB"),
+            port=os.getenv("DB.PORT")
         )
 
         list_teachers = mydb.cursor()
@@ -160,7 +164,8 @@ class SelectTeacherMenu(discord.ui.Select):
             host=os.getenv("DB.HOST"),
             user=os.getenv("DB.USER"),
             password=os.getenv("DB.PW"),
-            database=os.getenv("DB")
+            database=os.getenv("DB"),
+            port=os.getenv("DB.PORT")
         )
 
         teacher_form_of_address, teacher_name = self.values[0].split(' ', 1)
@@ -213,7 +218,8 @@ class grade_overview(commands.Cog):
                 host=os.getenv("DB.HOST"),
                 user=os.getenv("DB.USER"),
                 password=os.getenv("DB.PW"),
-                database=os.getenv("DB")
+                database=os.getenv("DB"),
+                port=os.getenv("DB.PORT")
             )
 
             mycursor = mydb.cursor()
@@ -241,7 +247,8 @@ class grade_overview(commands.Cog):
             host=os.getenv("DB.HOST"),
             user=os.getenv("DB.USER"),
             password=os.getenv("DB.PW"),
-            database=os.getenv("DB")
+            database=os.getenv("DB"),
+            port=os.getenv("DB.PORT")
         )
 
         user = interaction.user
@@ -338,7 +345,8 @@ class grade_overview(commands.Cog):
             host=os.getenv("DB.HOST"),
             user=os.getenv("DB.USER"),
             password=os.getenv("DB.PW"),
-            database=os.getenv("DB")
+            database=os.getenv("DB"),
+            port=os.getenv("DB.PORT")
         )
 
         teacher_insert = mydb.cursor()
