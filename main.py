@@ -17,7 +17,8 @@ class Client(commands.Bot):
             host=os.getenv("DB.HOST"),
             user=os.getenv("DB.USER"),
             password=os.getenv("DB.PW"),
-            database=os.getenv("DB")
+            database=os.getenv("DB"),
+            port=os.getenv("DB.PORT")
         )
 
         await self.load_extension("cogs.messages")
