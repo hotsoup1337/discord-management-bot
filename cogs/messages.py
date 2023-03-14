@@ -99,7 +99,8 @@ class Messages(commands.Cog):
             host=os.getenv("DB.HOST"),
             user=os.getenv("DB.USER"),
             password=os.getenv("DB.PW"),
-            database=os.getenv("DB")
+            database=os.getenv("DB"),
+            port=os.getenv("DB.PORT")
         )
 
         mycursor = mydb.cursor()
